@@ -39,6 +39,19 @@ autobuy:
     enable: "<#0DFB00><bold>Enabled"
     disable: "<#FB0000><bold>Disabled"
 
+# Criteria for determining which items can be sold
+disallowed-item:
+  # If the item has a custom name
+  custom-name: true
+  # If the item has lore (potions ignore this option)
+  lore: true
+  # If the item has a custom container (most plugins add containers to distinguish custom items from vanilla ones)
+  persistent-data-container: true
+  # If the item uses a custom model
+  custom-model-data: true
+  # If the item has flags (e.g., HIDE_ATTRIBUTES)
+  item-flags: true
+
 
 #
 # This feature shows the item price under the description of each item

@@ -7,11 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.action.Action;
 import org.jetby.libb.action.ActionContext;
 import org.jetby.libb.action.ActionInput;
-import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.TreexBuyer;
 import org.jetby.treexBuyer.manager.SellManager;
 import org.jetby.treexBuyer.menus.BuyerGui;
-import org.jetby.treexBuyer.models.UserData;
 
 public class SellAll implements Action {
     @Override

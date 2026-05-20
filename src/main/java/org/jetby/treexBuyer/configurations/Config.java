@@ -51,6 +51,13 @@ public class Config {
     public static Serializer SERIALIZER;
 
 
+    private boolean disallowedItemCustomName;
+    private boolean disallowedItemLore;
+    private boolean disallowedItemPersistent;
+    private boolean disallowedItemModelData;
+    private boolean disallowedItemItemFlags;
+
+
     private final BuyerManager manager;
 
     public Config(BuyerManager manager) {
@@ -99,6 +106,14 @@ public class Config {
         boosters_except_legal_coefficient = ss.getBoolean("boosters_except_legal_coefficient", false);
 
         itemsPrices = config.getString("items-prices-file", "prices.yml");
+
+        disallowedItemCustomName = config.getBoolean("disallowed-item.custom-name", true);
+        disallowedItemLore = config.getBoolean("disallowed-item.lore", true);
+        disallowedItemPersistent = config.getBoolean("disallowed-item.persistent-data-container", true);
+        disallowedItemModelData = config.getBoolean("disallowed-item.custom-model-data", true);
+        disallowedItemItemFlags = config.getBoolean("disallowed-item.item-flags", true);
+
+
         loadBoosts(ss);
     }
 

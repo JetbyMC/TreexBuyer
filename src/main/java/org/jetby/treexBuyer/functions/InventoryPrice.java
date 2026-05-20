@@ -39,7 +39,7 @@ public class InventoryPrice implements Listener {
 
     public InventoryPrice(BuyerManager manager) {
         this.manager = manager;
-        Bukkit.getPluginManager().registerEvents(this, manager.getPlugin());
+        manager.getPlugin().getServer().getPluginManager().registerEvents(this, manager.getPlugin());
         this.protocolManager = ProtocolLibrary.getProtocolManager();
     }
 
@@ -88,25 +88,28 @@ public class InventoryPrice implements Listener {
                     PacketContainer packet = event.getPacket();
                     Player player = event.getPlayer();
 
+                    if (player.getGameMode() == GameMode.CREATIVE) return;
                     try {
+                        PacketContainer fakePacket = packet.deepClone();
+
                         if (packet.getType() == PacketType.Play.Server.WINDOW_ITEMS) {
-                            List<ItemStack> items = packet.getItemListModifier().read(0);
+                            List<ItemStack> items = fakePacket.getItemListModifier().read(0);
                             List<ItemStack> modified = new ArrayList<>();
 
                             for (ItemStack item : items) {
-                                modified.add(addPriceToDisplay(player, item == null ? null : item.clone()));
+                                modified.add(addPriceToDisplay(player, item));
                             }
 
-                            packet.getItemListModifier().write(0, modified);
+                            fakePacket.getItemListModifier().write(0, modified);
 
                         } else if (packet.getType() == PacketType.Play.Server.SET_SLOT) {
-                            ItemStack item = packet.getItemModifier().read(0);
-                            if (isCustomInventory(player)) {
-                                if (!SellManager.isRegularItem(item)) return;
-                            }
-                            ItemStack clone = item == null ? null : item.clone();
-                            packet.getItemModifier().write(0, addPriceToDisplay(player, clone));
+                            ItemStack item = fakePacket.getItemModifier().read(0);
+                            if (isCustomInventory(player) && !SellManager.isRegularItem(item)) return;
+                            fakePacket.getItemModifier().write(0, addPriceToDisplay(player, item));
                         }
+
+                        event.setPacket(fakePacket);
+
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -133,40 +136,53 @@ public class InventoryPrice implements Listener {
         return !(holder instanceof Animals);
     }
 
-    private ItemStack addPriceToDisplay(Player player, ItemStack item) {
-        if (item == null || item.getType() == Material.AIR) return item;
-
+    private ItemStack addPriceToDisplay(Player player, ItemStack original) {
+        if (original == null || original.getType() == Material.AIR) {
+            return original;
+        }
         if (isCustomInventory(player)) {
-            if (!SellManager.isRegularItem(item)) return item;
+            if (!SellManager.isRegularItem(original)) return original;
         }
 
-        double originalPrice = manager.getItems().getOriginalPrice(item.getType());
-        if (originalPrice <= 0) return item;
+        double originalPrice = manager.getItems().getOriginalPrice(original.getType());
 
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) return item;
+        if (originalPrice <= 0) return original;
+
+
+        ItemStack display = original.clone();
+        ItemMeta meta = display.getItemMeta();
+
+        if (meta == null) {
+            return original;
+        }
 
         List<Component> lore = meta.lore();
-        if (lore == null) lore = new ArrayList<>();
-
-        List<Component> newLore = new ArrayList<>();
-        for (Component line : lore) {
-            if ("price_line".equals(line.style().insertion())) continue;
-            newLore.add(line);
+        if (lore == null) {
+            lore = new ArrayList<>();
         }
 
-        double price = SellManager.countPrice(player, item);
+        List<Component> newLore = new ArrayList<>();
+
+        for (Component line : lore) {
+            if ("price_line".equals(line.style().insertion())) {
+                continue;
+            }
+
+            newLore.add(line);
+        }
+        double price = SellManager.countPrice(player, original);
         Component priceLine = manager.getCfg().getInventoryPriceText()
                 .replaceText(builder ->
                         builder.matchLiteral("%price%")
                                 .replacement(Component.text(NumberUtils.format(price)))
                 )
-                .style(style -> style.insertion("price_line"));
+                .style(style -> style.insertion("price_line")); // mark
 
         newLore.add(priceLine);
-        meta.lore(newLore);
-        item.setItemMeta(meta);
 
-        return item;
+        meta.lore(newLore);
+        display.setItemMeta(meta);
+
+        return display;
     }
 }

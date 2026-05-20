@@ -16,6 +16,20 @@ categories:
     - STRING
     - SPIDER_EYE
 
+
+
+# Опции которые будут применены ко всем предметам там где они не переопределены
+default-rules:
+  enchantments:
+    sharpness:
+      1:
+        extra-price: 5.0
+        extra-score: 10.0
+      2:
+        extra-price: 10
+        extra-score: 20.0
+
+
 # Обычная стоимость предметов
 NETHERITE_INGOT:
   price: 10000.0
@@ -59,20 +73,6 @@ STRING:
 SPIDER_EYE:
   price: 50.0
   add-scores: 50.0
-
-
-# Опции которые будут применены ко всем предметам там где они не переопределены
-default-rules:
-
-  enchantments:
-    sharpness:
-      1:
-        extra-price: 5.0
-        extra-score: 10.0
-      2:
-        extra-price: 10
-        extra-score: 20.0
-
 
 diamond_sword:
   material: diamond_sword

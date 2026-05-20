@@ -1,14 +1,14 @@
 package org.jetby.treexBuyer.manager;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetby.treexBuyer.BuyerManager;
+import org.jetby.treexBuyer.configurations.Config;
+import org.jetby.treexBuyer.configurations.Items;
 import org.jetby.treexBuyer.models.Property;
 import org.jetby.treexBuyer.models.SellerItem;
 import org.jetby.treexBuyer.models.UserData;
@@ -25,18 +25,8 @@ public class SellManager {
         SellerItem sellerItem = BuyerManager.MANAGER.getItems().getItemByMaterial(item.getType());
         if (sellerItem == null) return;
 
-        double pricePerItem = BuyerManager.MANAGER.getCoefficientManager().getPriceWithCoefficient(player, item.getType());
-        double scorePerItem = sellerItem.addScore();
-
-        for (Property property : sellerItem.properties()) {
-            if (property.match(item)) {
-                pricePerItem+=property.extraPrice();
-                scorePerItem+=property.extraScore();
-            }
-        }
-
-        double price = pricePerItem * item.getAmount();
-        double score = scorePerItem * item.getAmount();
+        double price = countPrice(player, item);
+        double score = countScore(item);
 
         var eq = player.getEquipment();
         if (eq.getItemInOffHand().isSimilar(item)) eq.setItemInOffHand(AIR);
@@ -70,9 +60,15 @@ public class SellManager {
         if (sellerItem == null) return 0.0;
 
         double pricePerItem = BuyerManager.MANAGER.getCoefficientManager().getPriceWithCoefficient(player, item.getType());
+        for (Property property : Items.PROPERTIES) {
+            if (sellerItem.properties().contains(property)) continue;
+            if (property.match(item)) {
+                pricePerItem += property.extraPrice();
+            }
+        }
         for (Property property : sellerItem.properties()) {
             if (property.match(item)) {
-                pricePerItem+=property.extraPrice();
+                pricePerItem += property.extraPrice();
             }
         }
 
@@ -84,27 +80,48 @@ public class SellManager {
         if (!isRegularItem(item)) return 0.0;
         SellerItem sellerItem = BuyerManager.MANAGER.getItems().getItemByMaterial(item.getType());
         if (sellerItem == null) return 0.0;
+
         double scorePerItem = sellerItem.addScore();
-        for (Property property : sellerItem.properties()) {
+        for (Property property : Items.PROPERTIES) {
+            if (sellerItem.properties().contains(property)) continue;
             if (property.match(item)) {
-                scorePerItem+=property.extraScore();
+                scorePerItem += property.extraScore();
             }
         }
+        for (Property property : sellerItem.properties()) {
+            if (property.match(item)) {
+                scorePerItem += property.extraScore();
+            }
+        }
+
         return scorePerItem * item.getAmount();
     }
 
     public static boolean isRegularItem(@NotNull ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return false;
-        if (!meta.getPersistentDataContainer().isEmpty()) return false;
-        if (meta.hasDisplayName()) return false;
-        if (meta.hasCustomModelData()) return false;
-        if (!meta.getItemFlags().isEmpty()) return false;
+        Config config = BuyerManager.MANAGER.getCfg();
+        if (config == null) return true;
+        if (config.isDisallowedItemPersistent()) {
+            if (!meta.getPersistentDataContainer().isEmpty()) {
+                return false;
+            }
+        }
 
-        boolean isPotion = item.getType() == Material.POTION || item.getType() == Material.SPLASH_POTION;
-        if (!isPotion && meta.hasLore()) return false;
+        if (config.isDisallowedItemCustomName()) {
+            if (meta.hasDisplayName()) return false;
+        }
+        if (config.isDisallowedItemModelData()) {
+            if (meta.hasCustomModelData()) return false;
+        }
+        if (config.isDisallowedItemItemFlags()) {
+            if (!meta.getItemFlags().isEmpty()) return false;
+        }
+        if (config.isDisallowedItemLore()) {
+            boolean isPotion = item.getType() == Material.POTION || item.getType() == Material.SPLASH_POTION;
+            return isPotion || !meta.hasLore();
+        }
+        return true;
 
-        return !(meta instanceof LeatherArmorMeta lam)
-                || lam.getColor().equals(Bukkit.getItemFactory().getDefaultLeatherColor());
     }
 }
