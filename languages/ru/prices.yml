@@ -89,8 +89,8 @@ diamond_sword:
 
 strength_potion_bla_bla_bla:
   material: POTION
-  price: 0.0
-  add-scores: 0.0
+  price: 10.0
+  add-scores: 10.0
   potions:
     strength:
       1:

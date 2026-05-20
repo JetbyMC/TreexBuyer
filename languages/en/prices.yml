@@ -17,6 +17,17 @@ categories:
     - STRING
     - SPIDER_EYE
 
+# Options that will be applied to all items where they are not overridden.
+default-rules:
+  enchantments:
+    sharpness:
+      1:
+        extra-price: 5.0
+        extra-score: 10.0
+      2:
+        extra-price: 10
+        extra-score: 20.0
+
 # Item prices
 NETHERITE_INGOT:
   price: 10000
@@ -60,3 +71,30 @@ STRING:
 SPIDER_EYE:
   price: 50
   add-scores: 50
+
+
+diamond_sword:
+  material: diamond_sword
+  price: 60.0
+  add-scores: 5.0
+  enchantments:
+    sharpness:
+      1:
+        extra-price: 20.0
+        extra-score: 10.0
+      2:
+        extra-price: 10.0
+        extra-score: 20.0
+
+strength_potion_bla_bla_bla:
+  material: POTION
+  price: 10.0
+  add-scores: 10.0
+  potions:
+    strength:
+      1:
+        extra-price: 5.0
+        extra-score: 10.0
+      2:
+        extra-price: 15.0
+        extra-score: 20.0
