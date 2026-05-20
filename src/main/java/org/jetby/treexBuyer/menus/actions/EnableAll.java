@@ -1,13 +1,14 @@
 package org.jetby.treexBuyer.menus.actions;
 
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.action.Action;
 import org.jetby.libb.action.ActionContext;
 import org.jetby.libb.action.ActionInput;
 import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.menus.BuyerGui;
-import org.jetby.treexBuyer.modules.UserData;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jetby.treexBuyer.models.SellerItem;
+import org.jetby.treexBuyer.models.UserData;
 
 public class EnableAll implements Action {
     @Override
@@ -21,7 +22,11 @@ public class EnableAll implements Action {
         if (gui != null) {
             gui.getVisibleMaterials().forEach(user::addAutoBuyMaterial);
         } else {
-            user.getAutoBuyItems().addAll(BuyerManager.MANAGER.getItems().getItemValues().keySet());
+            user.getAutoBuyItems().addAll(BuyerManager.MANAGER.getItems()
+                    .getSellerItems().values()
+                    .stream()
+                    .map(SellerItem::material)
+                    .toList());
         }
     }
 }

@@ -1,9 +1,9 @@
 package org.jetby.treexBuyer;
 
-import org.jetby.treexBuyer.hook.LibbStableDownloader;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetby.treexBuyer.hook.LibbDownloader;
 
 import java.io.File;
 
@@ -17,7 +17,7 @@ public class TreexBuyer extends JavaPlugin {
     public void onLoad() {
 
         try {
-            new LibbStableDownloader("1.2").load();
+            new LibbDownloader().load();
         } catch (Exception ex) {
             throw new RuntimeException("Failed to load Libb", ex);
         }

@@ -1,8 +1,5 @@
 package org.jetby.treexBuyer.functions;
 
-import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.modules.UserData;
-import org.jetby.treexBuyer.tools.NumberUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,6 +11,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetby.treexBuyer.BuyerManager;
+import org.jetby.treexBuyer.models.UserData;
+import org.jetby.treexBuyer.tools.NumberUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +34,7 @@ public class PersistentActionBar implements Listener {
         Player player = event.getPlayer();
         UserData user = UserData.findByUuid(player.getUniqueId());
         if (user == null) return;
+        if (!manager.getCfg().isPersistentActionbar()) return;
         set(player, () -> replacePlaceholders(manager.getCfg().getPersistentActionbarText(), Map.of(
                 "%sell_pay%", NumberUtils.format(recalcSellPay(player)),
                 "%sell_pay_commas%", NumberUtils.formatWithCommas(recalcSellPay(player)),
@@ -48,7 +49,8 @@ public class PersistentActionBar implements Listener {
     }
 
     public void start() {
-        clearAll();
+        stop();
+        if (!manager.getCfg().isPersistentActionbar()) return;
         for (Player player : Bukkit.getOnlinePlayers()) {
             UserData user = UserData.findByUuid(player.getUniqueId());
             if (user == null) continue;
@@ -78,7 +80,7 @@ public class PersistentActionBar implements Listener {
         double total = 0.0;
         for (ItemStack item : inv.getContents()) {
             if (item == null) continue;
-            total += manager.getCoefficient().getPriceWithCoefficient(player, item.getType()) * item.getAmount();
+            total += manager.getCoefficientManager().getPriceWithCoefficient(player, item.getType()) * item.getAmount();
         }
         return total;
     }
@@ -98,6 +100,7 @@ public class PersistentActionBar implements Listener {
     }
 
     public void set(Player player, Supplier<Component> messageSupplier) {
+        if (!manager.getCfg().isPersistentActionbar()) return;
         clear(player);
 
         BukkitTask task = new BukkitRunnable() {

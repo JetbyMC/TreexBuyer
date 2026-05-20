@@ -2,8 +2,8 @@ package org.jetby.treexBuyer.storage.score.types;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.jetby.treexBuyer.storage.score.Score;
 import org.bukkit.Material;
+import org.jetby.treexBuyer.storage.score.Score;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

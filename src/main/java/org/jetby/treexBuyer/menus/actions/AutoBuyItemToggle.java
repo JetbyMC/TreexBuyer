@@ -1,15 +1,15 @@
 package org.jetby.treexBuyer.menus.actions;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.action.Action;
 import org.jetby.libb.action.ActionContext;
 import org.jetby.libb.action.ActionInput;
 import org.jetby.libb.gui.item.ItemWrapper;
 import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.configurations.Items;
-import org.jetby.treexBuyer.modules.UserData;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jetby.treexBuyer.models.SellerItem;
+import org.jetby.treexBuyer.models.UserData;
 
 public class AutoBuyItemToggle implements Action {
     @Override
@@ -23,8 +23,8 @@ public class AutoBuyItemToggle implements Action {
         if (wrapper == null || wrapper.itemStack() == null) return;
 
         Material material = wrapper.itemStack().getType();
-        Items.ItemData data = BuyerManager.MANAGER.getItems().getItemValues().get(material);
-        if (data == null) return;
+        SellerItem sellerItem = BuyerManager.MANAGER.getItems().getItemByMaterial(material);
+        if (sellerItem == null) return;
 
         if (user.getAutoBuyItems().contains(material)) {
             user.removeAutoBuyMaterial(material);

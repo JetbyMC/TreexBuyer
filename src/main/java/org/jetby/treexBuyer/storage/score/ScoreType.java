@@ -1,9 +1,9 @@
 package org.jetby.treexBuyer.storage.score;
 
+import org.bukkit.Material;
 import org.jetby.treexBuyer.storage.score.types.CategoryScore;
 import org.jetby.treexBuyer.storage.score.types.GlobalScore;
 import org.jetby.treexBuyer.storage.score.types.PerItemScore;
-import org.bukkit.Material;
 
 import java.util.Map;
 import java.util.function.Supplier;

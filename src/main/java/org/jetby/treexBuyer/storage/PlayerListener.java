@@ -1,11 +1,11 @@
 package org.jetby.treexBuyer.storage;
 
-import org.jetby.treexBuyer.BuyerManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetby.treexBuyer.BuyerManager;
 
 public class PlayerListener implements Listener {
 

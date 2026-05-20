@@ -1,16 +1,17 @@
 package org.jetby.treexBuyer.menus.actions;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.action.Action;
 import org.jetby.libb.action.ActionContext;
 import org.jetby.libb.action.ActionInput;
 import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.TreexBuyer;
+import org.jetby.treexBuyer.manager.SellManager;
 import org.jetby.treexBuyer.menus.BuyerGui;
-import org.jetby.treexBuyer.modules.UserData;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jetby.treexBuyer.models.UserData;
 
 public class SellAll implements Action {
     @Override
@@ -23,15 +24,7 @@ public class SellAll implements Action {
             ItemStack item = gui.getInventory().getItem(slot);
             if (item == null) return;
 
-            double score = BuyerManager.MANAGER.getItems().getScoreAmount(item.getType()) * item.getAmount();
-            double price = BuyerManager.MANAGER.getCoefficient().getPriceWithCoefficient(player, item.getType()) * item.getAmount();
-
-            if (score <= 0) return;
-
-            gui.getInventory().setItem(slot, null);
-
-            UserData.findByUuid(player.getUniqueId()).addScore(item.getType(), score);
-            BuyerManager.MANAGER.getEconomy().depositPlayer(player, price);
+            SellManager.sellAll(player, gui.getInventory());
         });
 
         Bukkit.getScheduler().runTask(TreexBuyer.INSTANCE, gui::refresh);

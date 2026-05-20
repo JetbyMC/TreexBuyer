@@ -1,12 +1,12 @@
 package org.jetby.treexBuyer.hook;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.modules.UserData;
-import org.jetby.treexBuyer.tools.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetby.treexBuyer.BuyerManager;
+import org.jetby.treexBuyer.models.UserData;
+import org.jetby.treexBuyer.tools.NumberUtils;
 
 public class TreexBuyerPlaceholder extends PlaceholderExpansion {
 
@@ -57,13 +57,13 @@ public class TreexBuyerPlaceholder extends PlaceholderExpansion {
         }
 
         if (args.startsWith("score_category_"))
-            return NumberUtils.format(manager.getCoefficient().getTotalScoreByCategory(player, params.substring("score_category_".length())));
+            return NumberUtils.format(manager.getCoefficientManager().getTotalScoreByCategory(player, params.substring("score_category_".length())));
 
         if (args.equalsIgnoreCase("coefficient"))
-            return NumberUtils.format(manager.getCoefficient().getTotalCoefficient(player, user.getScore()));
+            return NumberUtils.format(manager.getCoefficientManager().getTotalCoefficient(player, user.getScore()));
 
         if (args.startsWith("coefficient_category_"))
-            return NumberUtils.format(manager.getCoefficient().getTotalCoefficientByCategory(player, params.substring("coefficient_category_".length())));
+            return NumberUtils.format(manager.getCoefficientManager().getTotalCoefficientByCategory(player, params.substring("coefficient_category_".length())));
 
         return null;
     }

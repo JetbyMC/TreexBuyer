@@ -1,24 +1,26 @@
 package org.jetby.treexBuyer.functions;
 
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.modules.UserData;
+import org.jetby.treexBuyer.models.Boost;
+import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.storage.score.Score;
 import org.jetby.treexBuyer.storage.score.types.CategoryScore;
 import org.jetby.treexBuyer.storage.score.types.PerItemScore;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
-public class Coefficient {
+public class CoefficientManager {
 
     final BuyerManager manager;
 
-    public Coefficient(BuyerManager manager) {
+    public CoefficientManager(BuyerManager manager) {
         this.manager = manager;
     }
 
     public double getTotalCoefficient(Player player, Score score) {
         return getTotalCoefficient(player, score.getTotal());
     }
+
     public double getTotalCoefficient(Player player, double relevantScore) {
         double earned = relevantScore / manager.getCfg().getScores() * manager.getCfg().getCoefficient();
         double base = manager.getCfg().getDefaultCoefficient() + earned;
@@ -31,6 +33,7 @@ public class Coefficient {
                 ? legal + boost
                 : Math.min(base + boost, manager.getCfg().getMaxCoefficient());
     }
+
     public double getTotalCoefficientByCategory(Player player, String category) {
         UserData user = UserData.findByUuid(player.getUniqueId());
         if (user == null || !(user.getScore() instanceof CategoryScore cs)) return 0.0;

@@ -4,11 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.modules.UserData;
-import org.jetby.treexBuyer.tools.Logger;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
+import org.jetby.treexBuyer.BuyerManager;
+import org.jetby.treexBuyer.models.UserData;
+import org.jetby.treexBuyer.tools.Logger;
 
 import java.sql.*;
 import java.util.UUID;

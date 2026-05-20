@@ -1,16 +1,14 @@
 package org.jetby.treexBuyer.menus.actions;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.action.Action;
 import org.jetby.libb.action.ActionContext;
 import org.jetby.libb.action.ActionInput;
 import org.jetby.libb.gui.item.ItemWrapper;
-import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.functions.AutoBuy;
+import org.jetby.treexBuyer.manager.SellManager;
 import org.jetby.treexBuyer.menus.BuyerGui;
-import org.jetby.treexBuyer.modules.UserData;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 public class SellItem implements Action {
     @Override
@@ -23,7 +21,7 @@ public class SellItem implements Action {
 
         BuyerGui gui = ctx.get(BuyerGui.class);
         ItemWrapper wrapper = ctx.get(ItemWrapper.class);
-        if (gui == null || wrapper == null || s == null) return;
+        if (gui == null || wrapper == null) return;
 
         int amount;
         try {
@@ -34,7 +32,7 @@ public class SellItem implements Action {
             for (ItemStack itemStack : player.getInventory().getContents()) {
                 if (itemStack == null) continue;
                 if (itemStack.getType() != wrapper.itemStack().getType()) continue;
-                if (!AutoBuy.isRegularItem(itemStack)) continue;
+                if (!SellManager.isRegularItem(itemStack)) continue;
                 amount += itemStack.getAmount();
             }
         }
@@ -43,11 +41,7 @@ public class SellItem implements Action {
 
         player.getInventory().removeItem(new ItemStack(wrapper.itemStack().getType(), amount));
 
-        double score = BuyerManager.MANAGER.getItems().getScoreAmount(wrapper.itemStack().getType()) * amount;
-        double price = BuyerManager.MANAGER.getCoefficient().getPriceWithCoefficient(player, wrapper.itemStack().getType()) * amount;
-
-        UserData.findByUuid(player.getUniqueId()).addScore(wrapper.itemStack().getType(), score);
-        BuyerManager.MANAGER.getEconomy().depositPlayer(player, price);
+        SellManager.sell(player, wrapper.itemStack(), gui.getInventory());
         gui.refresh();
     }
 }

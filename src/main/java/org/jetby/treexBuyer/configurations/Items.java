@@ -1,45 +1,50 @@
 package org.jetby.treexBuyer.configurations;
 
 import lombok.Getter;
-import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.storage.score.Score;
-import org.jetby.treexBuyer.tools.Logger;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
+import org.jetby.treexBuyer.BuyerManager;
+import org.jetby.treexBuyer.models.Property;
+import org.jetby.treexBuyer.models.SellerItem;
+import org.jetby.treexBuyer.models.properties.EnchantmentProperty;
+import org.jetby.treexBuyer.models.properties.PotionProperty;
+import org.jetby.treexBuyer.storage.score.Score;
+import org.jetby.treexBuyer.tools.Logger;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public class Items {
 
     private final BuyerManager manager;
-    private final Map<Material, ItemData> itemValues = new LinkedHashMap<>();
+
+    private final Map<String, SellerItem> sellerItems = new LinkedHashMap<>();
+
     private final Map<Material, String> categories = new LinkedHashMap<>();
-    private FileConfiguration fileConfiguration;
+    private FileConfiguration config;
 
     public Items(BuyerManager manager) {
         this.manager = manager;
     }
+
     public void load() {
-        this.fileConfiguration = manager.getPlugin().getFileConfiguration("prices.yml");
+        this.config = manager.getPlugin().getFileConfiguration("prices.yml");
 
+        sellerItems.clear();
         categories.clear();
-        itemValues.clear();
 
-        ConfigurationSection categoriesSection = fileConfiguration.getConfigurationSection("categories");
+        ConfigurationSection categoriesSection = config.getConfigurationSection("categories");
         if (categoriesSection != null) {
             for (String category : categoriesSection.getKeys(false)) {
                 for (String name : categoriesSection.getStringList(category)) {
                     try {
                         Material material = Material.valueOf(name);
                         categories.put(material, category);
-                        double price = fileConfiguration.getDouble(material.name() + ".price", 0.0);
-                        double score = fileConfiguration.getDouble(material.name() + ".add-scores", 0);
-                        if (price<=0) continue;
-                        itemValues.put(material, new ItemData(price, score, category));
                     } catch (IllegalArgumentException e) {
                         Logger.error(manager.getPlugin(), "Invalid material in category " + category + ": " + name);
                     }
@@ -47,17 +52,65 @@ public class Items {
             }
         }
 
-        for (String key : fileConfiguration.getKeys(false)) {
+        for (String key : config.getKeys(false)) {
             if (key.equals("categories")) continue;
-            try {
-                Material material = Material.valueOf(key);
-                if (itemValues.containsKey(material)) continue;
-                double price = fileConfiguration.getDouble(key + ".price", 0.0);
-                double score = fileConfiguration.getDouble(key + ".add-scores", 0);
-                itemValues.put(material, new ItemData(price, score, "none"));
-            } catch (IllegalArgumentException e) {
-                Logger.error(manager.getPlugin(), "Invalid material in prices.yml: " + key);
+            String materialName = config.getString(key + ".material");
+            Material material = null;
+            if (materialName != null) {
+                try {
+                    material = Material.valueOf(materialName.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    Logger.error(manager.getPlugin(), "Invalid material in prices.yml: " + key);
+                }
+            } else {
+                try {
+                    material = Material.valueOf(key.toUpperCase());
+                } catch (IllegalArgumentException ignore) {
+                }
             }
+
+            if (sellerItems.containsKey(key) || (sellerItems.get(key)!=null && material == sellerItems.get(key).material())) continue;
+
+            double price = config.getDouble(key + ".price", 0.0);
+            double score = config.getDouble(key + ".add-scores", 0);
+
+            Set<Property> properties = new HashSet<>();
+
+            ConfigurationSection enchantmentsSection = config.getConfigurationSection(key + ".enchantments");
+            if (enchantmentsSection != null) {
+                for (String enchantName : enchantmentsSection.getKeys(false)) {
+                    ConfigurationSection enchantmentSection = enchantmentsSection.getConfigurationSection(enchantName);
+                    Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(enchantName));
+                    for (String level : enchantmentSection.getKeys(false)) {
+                        double extraPrice = enchantmentSection.getDouble(level + ".extra-price");
+                        double extraScore = enchantmentSection.getDouble(level + ".extra-score");
+
+                        properties.add(new EnchantmentProperty(Integer.parseInt(level), enchantment, extraPrice, extraScore));
+                    }
+                }
+            }
+            ConfigurationSection potionsSection = config.getConfigurationSection(key + ".potions");
+            if (potionsSection != null) {
+                for (String potionName : potionsSection.getKeys(false)) {
+                    ConfigurationSection enchantmentSection = potionsSection.getConfigurationSection(potionName);
+                    PotionEffectType potionType = PotionEffectType.getByKey(NamespacedKey.fromString(potionName));
+                    for (String level : enchantmentSection.getKeys(false)) {
+                        double extraPrice = enchantmentSection.getDouble(level + ".extra-price");
+                        double extraScore = enchantmentSection.getDouble(level + ".extra-score");
+
+                        properties.add(new PotionProperty(Integer.parseInt(level), potionType, extraPrice, extraScore));
+                    }
+                }
+            }
+
+
+            sellerItems.put(key, new SellerItem(key,
+                    material,
+                    categories.getOrDefault(material, "none"),
+                    price, score,
+                    properties));
+
+
         }
     }
 
@@ -72,18 +125,36 @@ public class Items {
                 .toList();
     }
 
+    public SellerItem getItemByMaterial(Material material) {
+        return getSellerItems().values()
+                .stream()
+                .filter(sellerItem -> sellerItem.material() == material)
+                .findFirst()
+                .orElse(null);
+    }
+
     public double getScoreAmount(Material material) {
-        Items.ItemData data = manager.getItems().getItemValues().get(material);
-        return data == null ? 0.0 : data.score();
+        SellerItem item = getSellerItems().values()
+                .stream()
+                .filter(sellerItem -> sellerItem.material() == material)
+                .findFirst()
+                .orElse(null);
+
+        return item == null ? 0.0 : item.addScore();
     }
+
     public double getOriginalPrice(Material material) {
-        Items.ItemData data = manager.getItems().getItemValues().get(material);
-        return data == null ? 0.0 : data.price();
+        SellerItem item = getSellerItems().values()
+                .stream()
+                .filter(sellerItem -> sellerItem.material() == material)
+                .findFirst()
+                .orElse(null);
+
+        return item == null ? 0.0 : item.price();
     }
+
     public Score createScore() {
         return manager.getCfg().getType().createScore(categories);
     }
 
-    public record ItemData(double price, double score, String category) {
-    }
 }

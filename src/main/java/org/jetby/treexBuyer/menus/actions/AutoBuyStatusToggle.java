@@ -1,11 +1,11 @@
 package org.jetby.treexBuyer.menus.actions;
 
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.action.Action;
 import org.jetby.libb.action.ActionContext;
 import org.jetby.libb.action.ActionInput;
-import org.jetby.treexBuyer.modules.UserData;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jetby.treexBuyer.models.UserData;
 
 public class AutoBuyStatusToggle implements Action {
     @Override

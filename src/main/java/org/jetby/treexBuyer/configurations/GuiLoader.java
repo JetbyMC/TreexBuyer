@@ -1,13 +1,13 @@
 package org.jetby.treexBuyer.configurations;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.jetby.libb.command.CommandRegistrar;
 import org.jetby.libb.util.Logger;
 import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.menus.BuyerGui;
-import org.jetby.treexBuyer.modules.UserData;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
+import org.jetby.treexBuyer.models.UserData;
 
 import java.io.File;
 import java.util.HashMap;

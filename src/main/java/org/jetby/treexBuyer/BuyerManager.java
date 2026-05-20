@@ -2,30 +2,28 @@ package org.jetby.treexBuyer;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.action.ActionRegistry;
-import org.jetby.libb.color.Serializer;
 import org.jetby.libb.util.Metrics;
 import org.jetby.libb.util.VersionUtil;
 import org.jetby.treexBuyer.configurations.Config;
 import org.jetby.treexBuyer.configurations.GuiLoader;
 import org.jetby.treexBuyer.configurations.Items;
 import org.jetby.treexBuyer.functions.AutoBuy;
-import org.jetby.treexBuyer.functions.Coefficient;
+import org.jetby.treexBuyer.functions.CoefficientManager;
 import org.jetby.treexBuyer.functions.InventoryPrice;
 import org.jetby.treexBuyer.functions.PersistentActionBar;
 import org.jetby.treexBuyer.hook.TreexBuyerPlaceholder;
 import org.jetby.treexBuyer.hook.Vault;
 import org.jetby.treexBuyer.menus.BuyerGui;
 import org.jetby.treexBuyer.menus.actions.*;
-import org.jetby.treexBuyer.modules.UserData;
+import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.storage.*;
 import org.jetby.treexBuyer.tools.Logger;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 @Getter
 public final class BuyerManager {
@@ -45,7 +43,7 @@ public final class BuyerManager {
     private Storage storage;
     private Config cfg;
     private Items items;
-    private Coefficient coefficient;
+    private CoefficientManager coefficientManager;
     private AutoBuy autoBuy;
     private InventoryPrice inventoryPrice;
     @Getter
@@ -103,7 +101,7 @@ public final class BuyerManager {
 
         autoBuy = new AutoBuy(this);
         autoBuy.start();
-        coefficient = new Coefficient(this);
+        coefficientManager = new CoefficientManager(this);
 
         actionBarUtil = new PersistentActionBar(this);
         actionBarUtil.start();
@@ -146,6 +144,7 @@ public final class BuyerManager {
 
     public void onDisable() {
         ActionRegistry.unregisterAll("treexbuyer");
+
 
         if (autoBuy != null) {
             autoBuy.stop();

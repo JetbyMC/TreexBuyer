@@ -2,8 +2,8 @@ package org.jetby.treexBuyer.storage.score.types;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import org.jetby.treexBuyer.storage.score.Score;
 import org.bukkit.Material;
+import org.jetby.treexBuyer.storage.score.Score;
 
 public class GlobalScore implements Score {
 

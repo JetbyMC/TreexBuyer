@@ -1,5 +1,9 @@
 package org.jetby.treexBuyer;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetby.libb.command.AdvancedCommand;
 import org.jetby.libb.command.annotations.Permission;
 import org.jetby.libb.command.annotations.SubCommand;
@@ -9,16 +13,12 @@ import org.jetby.libb.util.Logger;
 import org.jetby.treexBuyer.configurations.Config;
 import org.jetby.treexBuyer.configurations.GuiLoader;
 import org.jetby.treexBuyer.menus.BuyerGui;
-import org.jetby.treexBuyer.modules.UserData;
+import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.storage.score.Score;
 import org.jetby.treexBuyer.storage.score.ScoreType;
 import org.jetby.treexBuyer.storage.score.types.CategoryScore;
 import org.jetby.treexBuyer.storage.score.types.GlobalScore;
 import org.jetby.treexBuyer.storage.score.types.PerItemScore;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -65,6 +65,7 @@ public class BuyerCommand extends AdvancedCommand {
         UserData user = UserData.getOrCreate(target.getUniqueId(), manager.getItems().createScore());
         new BuyerGui(target, user, GuiLoader.ALL_GUIS.get(menuName), manager).open(target);
     }
+
     @SubCommand({"test"})
     @Permission("treexbuyer.admin")
     @InsufficientArgs("<#EF473A>Usage: /treexbuyer open <menu> [player]")
@@ -95,10 +96,8 @@ public class BuyerCommand extends AdvancedCommand {
                 manager.getGuiLoader().loadGuis();
                 if (manager.isProtocol())
                     manager.getInventoryPrice().load();
-                manager.getActionBarUtil().stop();
-                if (manager.getCfg().isPersistentActionbar()) {
-                    manager.getActionBarUtil().start();
-                }
+                manager.getActionBarUtil().start();
+
             } catch (Exception ex) {
                 Logger.error(manager.getPlugin(), "Error with config reloading: " + ex);
                 sender.sendMessage(Config.SERIALIZER.deserialize("<#EF473A>Error: " + ex.getMessage()));

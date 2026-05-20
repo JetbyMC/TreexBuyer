@@ -1,14 +1,6 @@
 package org.jetby.treexBuyer.menus;
 
 import lombok.Getter;
-import org.jetby.libb.gui.parser.Item;
-import org.jetby.libb.gui.parser.ParseUtil;
-import org.jetby.libb.gui.parser.ParsedGui;
-import org.jetby.libb.gui.parser.ParserContext;
-import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.configurations.Config;
-import org.jetby.treexBuyer.modules.UserData;
-import org.jetby.treexBuyer.tools.NumberUtils;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -16,6 +8,15 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetby.libb.gui.parser.Item;
+import org.jetby.libb.gui.parser.ParseUtil;
+import org.jetby.libb.gui.parser.ParsedGui;
+import org.jetby.libb.gui.parser.ParserContext;
+import org.jetby.treexBuyer.BuyerManager;
+import org.jetby.treexBuyer.configurations.Config;
+import org.jetby.treexBuyer.manager.SellManager;
+import org.jetby.treexBuyer.models.UserData;
+import org.jetby.treexBuyer.tools.NumberUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,7 +81,7 @@ public class BuyerGui extends ParsedGui {
             ItemStack item = inv.getItem(slot);
             if (item == null) continue;
 
-            total += manager.getCoefficient().getPriceWithCoefficient(player, item.getType()) * item.getAmount();
+            total += SellManager.countPrice(player, item);
         }
         setReplace("%sell_pay%", NumberUtils.format(total));
         setReplace("%sell_pay_commas%", NumberUtils.formatWithCommas(total));
@@ -93,7 +94,7 @@ public class BuyerGui extends ParsedGui {
             ItemStack item = inv.getItem(slot);
             if (item == null) continue;
 
-            total += manager.getItems().getScoreAmount(item.getType()) * item.getAmount();
+            total += SellManager.countScore(item);
         }
         setReplace("%sell_score%", NumberUtils.format(total));
         setReplace("%sell_score_commas%", NumberUtils.formatWithCommas(total));
@@ -105,7 +106,7 @@ public class BuyerGui extends ParsedGui {
         recalcSellScore();
         setReplace("%score%", NumberUtils.format(user.getScore().getTotal()));
         setReplace("%score_commas%", NumberUtils.formatWithCommas(user.getScore().getTotal()));
-        setReplace("%coefficient%", NumberUtils.format(manager.getCoefficient().getTotalCoefficient(player, user.getScore())));
+        setReplace("%coefficient%", NumberUtils.format(manager.getCoefficientManager().getTotalCoefficient(player, user.getScore())));
         super.refresh();
     }
 
@@ -155,7 +156,7 @@ public class BuyerGui extends ParsedGui {
             int slot = slots.get(i);
 
             double price = manager.getItems().getOriginalPrice(mat);
-            double priceWithCoeff = manager.getCoefficient().getPriceWithCoefficient(player, mat);
+            double priceWithCoeff = manager.getCoefficientManager().getPriceWithCoefficient(player, mat);
 
             Item copy = cloneWithMaterial(template, mat, slot, price, priceWithCoeff);
             result.add(copy);
@@ -205,7 +206,7 @@ public class BuyerGui extends ParsedGui {
                 .filter(item -> item != null && !item.getType().isAir())
                 .filter(item -> !getSellSlots().contains(/* slot */ 0))
                 .map(ItemStack::getType)
-                .filter(mat -> BuyerManager.MANAGER.getItems().getItemValues().containsKey(mat))
+                .filter(mat -> BuyerManager.MANAGER.getItems().getItemByMaterial(mat) != null)
                 .distinct()
                 .toList();
     }

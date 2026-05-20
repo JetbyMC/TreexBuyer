@@ -1,10 +1,10 @@
 package org.jetby.treexBuyer.hook;
 
-import org.jetby.treexBuyer.TreexBuyer;
-import org.jetby.treexBuyer.tools.Logger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.jetby.treexBuyer.TreexBuyer;
+import org.jetby.treexBuyer.tools.Logger;
 
 public class Vault {
     public static Economy setupEconomy(TreexBuyer plugin) {

@@ -1,7 +1,7 @@
 package org.jetby.treexBuyer.storage;
 
 import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.modules.UserData;
+import org.jetby.treexBuyer.models.UserData;
 
 import java.util.UUID;
 

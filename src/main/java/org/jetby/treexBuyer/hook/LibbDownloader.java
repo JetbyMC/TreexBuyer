@@ -18,7 +18,7 @@ public class LibbDownloader {
 
     public void load() {
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Libb");
-        if (plugin!=null) return;
+        if (plugin != null) return;
 
         downloadAndLoad(getLatestFileUrl("libb"));
 

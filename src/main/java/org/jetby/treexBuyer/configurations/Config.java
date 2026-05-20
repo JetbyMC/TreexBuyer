@@ -1,6 +1,9 @@
 package org.jetby.treexBuyer.configurations;
 
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.jetby.libb.LibbApi;
 import org.jetby.libb.action.record.ActionBlock;
 import org.jetby.libb.color.HashedSerializer;
@@ -8,11 +11,8 @@ import org.jetby.libb.color.Serializer;
 import org.jetby.libb.color.SerializerType;
 import org.jetby.libb.gui.parser.ParseUtil;
 import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.functions.Boost;
+import org.jetby.treexBuyer.models.Boost;
 import org.jetby.treexBuyer.storage.score.ScoreType;
-import net.kyori.adventure.text.Component;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +52,7 @@ public class Config {
 
 
     private final BuyerManager manager;
+
     public Config(BuyerManager manager) {
         this.manager = manager;
     }

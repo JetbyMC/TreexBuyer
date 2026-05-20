@@ -1,5 +1,3 @@
-
-
 # Категории:
 categories:
   mine:
@@ -20,46 +18,84 @@ categories:
 
 # Обычная стоимость предметов
 NETHERITE_INGOT:
-  price: 10000
-  add-scores: 250
+  price: 10000.0
+  add-scores: 250.0
 NETHERITE_SCRAP:
-  price: 2000
-  add-scores: 100
+  price: 2000.0
+  add-scores: 100.0
 EMERALD:
-  price: 1500
-  add-scores: 80
+  price: 1500.0
+  add-scores: 80.0
 DIAMOND:
-  price: 500
-  add-scores: 50
+  price: 500.0
+  add-scores: 50.0
 GOLD_INGOT:
-  price: 200
-  add-scores: 50
+  price: 200.0
+  add-scores: 50.0
 IRON_INGOT:
-  price: 80
-  add-scores: 50
+  price: 80.0
+  add-scores: 50.0
 REDSTONE:
-  price: 15
-  add-scores: 50
+  price: 15.0
+  add-scores: 50.0
 LAPIS_LAZULI:
-  price: 5
-  add-scores: 50
+  price: 5.0
+  add-scores: 50.0
 COAL:
-  price: 8
-  add-scores: 50
+  price: 8.0
+  add-scores: 50.0
 QUARTZ:
-  price: 10
-  add-scores: 50
+  price: 10.0
+  add-scores: 50.0
 BONE:
-  price: 5
-  add-scores: 50
+  price: 5.0
+  add-scores: 50.0
 LEATHER:
-  price: 15
-  add-scores: 50
+  price: 15.0
+  add-scores: 50.0
 STRING:
-  price: 25
-  add-scores: 50
+  price: 25.0
+  add-scores: 50.0
 SPIDER_EYE:
-  price: 50
-  add-scores: 50
+  price: 50.0
+  add-scores: 50.0
 
 
+# Опции которые будут применены ко всем предметам там где они не переопределены
+default-rules:
+
+  enchantments:
+    sharpness:
+      1:
+        extra-price: 5.0
+        extra-score: 10.0
+      2:
+        extra-price: 10
+        extra-score: 20.0
+
+
+diamond_sword:
+  material: diamond_sword
+  price: 60.0
+  add-scores: 5.0
+  enchantments:
+    sharpness:
+      1:
+        extra-price: 20.0
+        extra-score: 10.0
+      2:
+        extra-price: 10.0
+        extra-score: 20.0
+
+strength_potion_bla_bla_bla:
+  material: POTION
+  price: 0.0
+  add-scores: 0.0
+  potions:
+    strength:
+      1:
+        extra-price: 5.0
+        extra-score: 10.0
+      2:
+        extra-price: 15.0
+        extra-score: 20.0
