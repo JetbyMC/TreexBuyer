@@ -8,9 +8,9 @@ website: https://jetby.org
 depend:
   - Vault
   - PlaceholderAPI
+  - Libb
 softdepend:
   - ProtocolLib
-  - Libb
 commands:
   treexbuyer:
     aliases:

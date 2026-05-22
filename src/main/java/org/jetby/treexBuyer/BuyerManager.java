@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.action.ActionRegistry;
+import org.jetby.libb.util.Logger;
 import org.jetby.libb.util.Metrics;
 import org.jetby.libb.util.VersionUtil;
 import org.jetby.treexBuyer.configurations.Config;
@@ -23,7 +24,6 @@ import org.jetby.treexBuyer.menus.BuyerGui;
 import org.jetby.treexBuyer.menus.actions.*;
 import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.storage.*;
-import org.jetby.treexBuyer.tools.Logger;
 
 @Getter
 public final class BuyerManager {
@@ -32,6 +32,8 @@ public final class BuyerManager {
 
     @NotNull
     private final TreexBuyer plugin;
+    
+    public static final Logger LOGGER = new Logger();
 
     public BuyerManager(@NotNull TreexBuyer plugin) {
         this.plugin = plugin;
@@ -58,21 +60,21 @@ public final class BuyerManager {
         MANAGER = this;
 
 
-        Logger.info(plugin, "------------------------");
+        LOGGER.info(plugin, "------------------------");
         new VersionUtil(plugin, plugin.getDescription().getVersion(), "https://raw.githubusercontent.com/MrJetby/TreexBuyer/refs/heads/master/VERSION", "treexbuyer.auto-update");
         this.economy = Vault.setupEconomy(plugin);
         if (economy == null) return;
 
-        Logger.info(plugin, "<green>Enabling TreexBuyer...");
+        LOGGER.info(plugin, "<green>Enabling TreexBuyer...");
 
         new Metrics(plugin, 25141);
 
         try {
             cfg = new Config(this);
             cfg.load();
-            Logger.info(plugin, "<green>✔ Config");
+            LOGGER.info(plugin, "<green>✔ Config");
         } catch (Exception e) {
-            Logger.error(plugin, "<red>✘ Config");
+            LOGGER.error(plugin, "<red>✘ Config");
             e.printStackTrace();
         }
 
@@ -80,18 +82,18 @@ public final class BuyerManager {
         try {
             items = new Items(this);
             items.load();
-            Logger.info(plugin, "<green>✔ Items");
+            LOGGER.info(plugin, "<green>✔ Items");
         } catch (Exception e) {
-            Logger.error(plugin, "<red>✘ Items");
+            LOGGER.error(plugin, "<red>✘ Items");
             e.printStackTrace();
         }
 
         try {
             guiLoader = new GuiLoader(this);
             guiLoader.loadGuis();
-            Logger.info(plugin, "<green>✔ Guis (" + GuiLoader.ALL_GUIS.size() + " menus)");
+            LOGGER.info(plugin, "<green>✔ Guis (" + GuiLoader.ALL_GUIS.size() + " menus)");
         } catch (Exception e) {
-            Logger.error(plugin, "<red>✘ Guis");
+            LOGGER.error(plugin, "<red>✘ Guis");
             e.printStackTrace();
         }
 
@@ -113,9 +115,9 @@ public final class BuyerManager {
             inventoryPrice.load();
 
             this.isProtocol = true;
-            Logger.info(plugin, "<green>✔ ProtocolLib");
+            LOGGER.info(plugin, "<green>✔ ProtocolLib");
         } catch (Exception e) {
-            Logger.error(plugin, "<red>✘ ProtocolLib not found. Inventory price not going to work.");
+            LOGGER.error(plugin, "<red>✘ ProtocolLib not found. Inventory price not going to work.");
             e.printStackTrace();
         }
 
@@ -126,9 +128,9 @@ public final class BuyerManager {
             treexBuyerPlaceholder = new TreexBuyerPlaceholder(this);
             treexBuyerPlaceholder.register();
 
-            Logger.info(plugin, "<green>✔ PlaceholderAPI");
+            LOGGER.info(plugin, "<green>✔ PlaceholderAPI");
         } catch (Exception e) {
-            Logger.error(plugin, e.getMessage());
+            LOGGER.error(plugin, e.getMessage());
             Bukkit.getPluginManager().disablePlugin(plugin);
             return;
         }
@@ -137,9 +139,9 @@ public final class BuyerManager {
 
         new BuyerCommand(this).register();
 
-        Logger.info(plugin, "");
-        Logger.info(plugin, "<green>Plugin was successfully enabled, enjoy it :)");
-        Logger.info(plugin, "------------------------");
+        LOGGER.info(plugin, "");
+        LOGGER.info(plugin, "<green>Plugin was successfully enabled, enjoy it :)");
+        LOGGER.info(plugin, "------------------------");
     }
 
     public void onDisable() {

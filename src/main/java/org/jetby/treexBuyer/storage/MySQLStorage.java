@@ -8,10 +8,11 @@ import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.models.UserData;
-import org.jetby.treexBuyer.tools.Logger;
 
 import java.sql.*;
 import java.util.UUID;
+
+import static org.jetby.treexBuyer.BuyerManager.LOGGER;
 
 public class MySQLStorage
         implements Storage {
@@ -68,7 +69,7 @@ public class MySQLStorage
             if (!rs.next()) return new UserData(uuid, manager.getItems().createScore());
             return parseRow(rs);
         } catch (SQLException e) {
-            Logger.warn(manager.getPlugin(), "Failed to load user " + uuid + ": " + e.getMessage());
+            LOGGER.warn(manager.getPlugin(), "Failed to load user " + uuid + ": " + e.getMessage());
         }
         return new UserData(uuid, manager.getItems().createScore());
     }
@@ -120,7 +121,7 @@ public class MySQLStorage
                 ps.setString(1, uuid.toString());
                 ps.executeUpdate();
             } catch (SQLException e) {
-                Logger.warn(manager.getPlugin(), "Failed to delete user " + uuid + ": " + e.getMessage());
+                LOGGER.warn(manager.getPlugin(), "Failed to delete user " + uuid + ": " + e.getMessage());
             }
         });
     }
@@ -152,7 +153,7 @@ public class MySQLStorage
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
-            Logger.warn(manager.getPlugin(), "Failed to create table: " + e.getMessage());
+            LOGGER.warn(manager.getPlugin(), "Failed to create table: " + e.getMessage());
         }
     }
 }

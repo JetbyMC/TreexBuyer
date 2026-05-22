@@ -11,6 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetby.libb.platform.PlatformSender;
 import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.tools.NumberUtils;
@@ -110,7 +111,7 @@ public class PersistentActionBar implements Listener {
                     clear(player);
                     return;
                 }
-                player.sendActionBar(messageSupplier.get());
+                PlatformSender.sendActionBar(player, messageSupplier.get());
             }
         }.runTaskTimer(manager.getPlugin(), 0L, 20L);
 

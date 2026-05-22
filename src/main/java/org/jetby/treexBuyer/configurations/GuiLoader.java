@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.jetby.treexBuyer.BuyerManager.LOGGER;
+
 public class GuiLoader {
 
     public static final Map<String, FileConfiguration> ALL_GUIS = new HashMap<>();
@@ -71,7 +73,7 @@ public class GuiLoader {
 
     private void loadGui(String menuId, File file) {
         if (ALL_GUIS.containsKey(menuId)) {
-            Logger.error(manager.getPlugin(), "A duplicate of " + menuId + " was found");
+            LOGGER.error(manager.getPlugin(), "A duplicate of " + menuId + " was found");
             return;
         }
         try {
@@ -89,7 +91,7 @@ public class GuiLoader {
             }
             ALL_GUIS.put(menuId, config);
         } catch (Exception e) {
-            Logger.error(manager.getPlugin(), "Error trying to load menu: " + e.getMessage());
+            LOGGER.error(manager.getPlugin(), "Error trying to load menu: " + e.getMessage());
         }
     }
 

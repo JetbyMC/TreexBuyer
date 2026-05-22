@@ -13,9 +13,10 @@ import org.jetby.treexBuyer.models.SellerItem;
 import org.jetby.treexBuyer.models.properties.EnchantmentProperty;
 import org.jetby.treexBuyer.models.properties.PotionProperty;
 import org.jetby.treexBuyer.storage.score.Score;
-import org.jetby.treexBuyer.tools.Logger;
 
 import java.util.*;
+
+import static org.jetby.treexBuyer.BuyerManager.LOGGER;
 
 @Getter
 public class Items {
@@ -47,7 +48,7 @@ public class Items {
                         Material material = Material.valueOf(name);
                         categories.put(material, category);
                     } catch (IllegalArgumentException e) {
-                        Logger.error(manager.getPlugin(), "Invalid material in category " + category + ": " + name);
+                        LOGGER.error(manager.getPlugin(), "Invalid material in category " + category + ": " + name);
                     }
                 }
             }
@@ -65,7 +66,7 @@ public class Items {
                 try {
                     material = Material.valueOf(materialName.toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    Logger.error(manager.getPlugin(), "Invalid material in prices.yml: " + key);
+                    LOGGER.error(manager.getPlugin(), "Invalid material in prices.yml: " + key);
                 }
             } else {
                 try {

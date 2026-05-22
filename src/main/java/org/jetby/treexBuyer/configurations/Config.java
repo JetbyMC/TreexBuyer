@@ -67,7 +67,7 @@ public class Config {
     public void load() {
         this.config = manager.getPlugin().getFileConfiguration("config.yml");
 
-//        Logger.setDebug(fileConfiguration.getBoolean("debug", false));
+//        LOGGER.setDebug(fileConfiguration.getBoolean("debug", false));
 
 
         SERIALIZER = new HashedSerializer(
