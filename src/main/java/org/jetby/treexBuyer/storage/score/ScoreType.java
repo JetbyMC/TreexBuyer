@@ -1,6 +1,7 @@
 package org.jetby.treexBuyer.storage.score;
 
 import org.bukkit.Material;
+import org.jetby.treexBuyer.configurations.Items;
 import org.jetby.treexBuyer.storage.score.types.CategoryScore;
 import org.jetby.treexBuyer.storage.score.types.GlobalScore;
 import org.jetby.treexBuyer.storage.score.types.PerItemScore;
@@ -22,13 +23,10 @@ public enum ScoreType {
     }
 
     public Score createScore() {
+        if (this == CATEGORY) {
+            return new CategoryScore();
+        }
         return factory.get();
     }
 
-    public Score createScore(Map<Material, String> categoryMap) {
-        if (this == CATEGORY) {
-            return new CategoryScore(categoryMap);
-        }
-        return createScore();
-    }
 }

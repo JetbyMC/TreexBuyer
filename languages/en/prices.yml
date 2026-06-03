@@ -28,6 +28,13 @@ default-rules:
         extra-price: 10
         extra-score: 20.0
 
+
+# Example of selling custom items using customModelData
+#custom_item_example1:
+#  model: 123
+#  price: 60.0
+#  add-scores: 5.0
+
 # Item prices
 NETHERITE_INGOT:
   price: 10000

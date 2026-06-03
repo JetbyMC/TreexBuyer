@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetby.libb.platform.PlatformSender;
 import org.jetby.treexBuyer.BuyerManager;
+import org.jetby.treexBuyer.manager.SellManager;
 import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.tools.NumberUtils;
 
@@ -37,10 +38,10 @@ public class PersistentActionBar implements Listener {
         if (user == null) return;
         if (!manager.getCfg().isPersistentActionbar()) return;
         set(player, () -> replacePlaceholders(manager.getCfg().getPersistentActionbarText(), Map.of(
-                "%sell_pay%", NumberUtils.format(recalcSellPay(player)),
-                "%sell_pay_commas%", NumberUtils.formatWithCommas(recalcSellPay(player)),
-                "%sell_score%", NumberUtils.format(recalcSellScore(player)),
-                "%sell_score_commas", NumberUtils.formatWithCommas(recalcSellScore(player)))
+                "%sell_pay%", NumberUtils.format(SellManager.countPrice(player)),
+                "%sell_pay_commas%", NumberUtils.formatWithCommas(SellManager.countPrice(player)),
+                "%sell_score%", NumberUtils.format(SellManager.countScore(player)),
+                "%sell_score_commas", NumberUtils.formatWithCommas(SellManager.countScore(player)))
         ));
     }
 
@@ -57,10 +58,10 @@ public class PersistentActionBar implements Listener {
             if (user == null) continue;
 
             set(player, () -> replacePlaceholders(manager.getCfg().getPersistentActionbarText(), Map.of(
-                    "%sell_pay%", NumberUtils.format(recalcSellPay(player)),
-                    "%sell_pay_commas%", NumberUtils.formatWithCommas(recalcSellPay(player)),
-                    "%sell_score%", NumberUtils.format(recalcSellScore(player)),
-                    "%sell_score_commas", NumberUtils.formatWithCommas(recalcSellScore(player)))
+                    "%sell_pay%", NumberUtils.format(SellManager.countPrice(player)),
+                    "%sell_pay_commas%", NumberUtils.formatWithCommas(SellManager.countPrice(player)),
+                    "%sell_score%", NumberUtils.format(SellManager.countScore(player)),
+                    "%sell_score_commas", NumberUtils.formatWithCommas(SellManager.countScore(player)))
             ));
         }
 
@@ -74,26 +75,6 @@ public class PersistentActionBar implements Listener {
             );
         }
         return result;
-    }
-
-    private double recalcSellPay(Player player) {
-        Inventory inv = player.getInventory();
-        double total = 0.0;
-        for (ItemStack item : inv.getContents()) {
-            if (item == null) continue;
-            total += manager.getCoefficientManager().getPriceWithCoefficient(player, item.getType()) * item.getAmount();
-        }
-        return total;
-    }
-
-    private double recalcSellScore(Player player) {
-        Inventory inv = player.getInventory();
-        double total = 0.0;
-        for (ItemStack item : inv.getContents()) {
-            if (item == null) continue;
-            total += manager.getItems().getScoreAmount(item.getType()) * item.getAmount();
-        }
-        return total;
     }
 
     public void stop() {

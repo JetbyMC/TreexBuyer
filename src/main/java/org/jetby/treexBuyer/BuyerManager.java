@@ -6,6 +6,10 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.action.ActionRegistry;
 import org.jetby.libb.util.Logger;
@@ -32,8 +36,8 @@ public final class BuyerManager {
 
     @NotNull
     private final TreexBuyer plugin;
-    
-    public static final Logger LOGGER = new Logger();
+
+    public static final Logger LOGGER = new Logger(TreexBuyer.INSTANCE);
 
     public BuyerManager(@NotNull TreexBuyer plugin) {
         this.plugin = plugin;
@@ -60,6 +64,7 @@ public final class BuyerManager {
         MANAGER = this;
 
 
+        LOGGER.info(plugin, Bukkit.getVersion());
         LOGGER.info(plugin, "------------------------");
         new VersionUtil(plugin, plugin.getDescription().getVersion(), "https://raw.githubusercontent.com/MrJetby/TreexBuyer/refs/heads/master/VERSION", "treexbuyer.auto-update");
         this.economy = Vault.setupEconomy(plugin);
@@ -142,6 +147,7 @@ public final class BuyerManager {
         LOGGER.info(plugin, "");
         LOGGER.info(plugin, "<green>Plugin was successfully enabled, enjoy it :)");
         LOGGER.info(plugin, "------------------------");
+
     }
 
     public void onDisable() {

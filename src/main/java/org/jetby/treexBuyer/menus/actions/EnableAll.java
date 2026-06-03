@@ -6,6 +6,7 @@ import org.jetby.libb.action.Action;
 import org.jetby.libb.action.ActionContext;
 import org.jetby.libb.action.ActionInput;
 import org.jetby.treexBuyer.BuyerManager;
+import org.jetby.treexBuyer.configurations.Items;
 import org.jetby.treexBuyer.menus.BuyerGui;
 import org.jetby.treexBuyer.models.SellerItem;
 import org.jetby.treexBuyer.models.UserData;
@@ -22,8 +23,7 @@ public class EnableAll implements Action {
         if (gui != null) {
             gui.getVisibleMaterials().forEach(user::addAutoBuyMaterial);
         } else {
-            user.getAutoBuyItems().addAll(BuyerManager.MANAGER.getItems()
-                    .getSellerItems().values()
+            user.getAutoBuyItems().addAll(Items.SELLER_ITEMS.values()
                     .stream()
                     .map(SellerItem::material)
                     .toList());

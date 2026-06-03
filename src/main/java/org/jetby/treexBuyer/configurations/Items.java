@@ -13,6 +13,7 @@ import org.jetby.treexBuyer.models.SellerItem;
 import org.jetby.treexBuyer.models.properties.EnchantmentProperty;
 import org.jetby.treexBuyer.models.properties.PotionProperty;
 import org.jetby.treexBuyer.storage.score.Score;
+import org.jetby.treexBuyer.tools.CustomModelDataUtil;
 
 import java.util.*;
 
@@ -23,11 +24,11 @@ public class Items {
 
     private final BuyerManager manager;
 
-    private final Map<String, SellerItem> sellerItems = new LinkedHashMap<>();
-
-    private final Map<Material, String> categories = new LinkedHashMap<>();
-    private FileConfiguration config;
+    public static final Map<String, SellerItem> SELLER_ITEMS = new LinkedHashMap<>();
+    public static final Map<Material, String> CATEGORIES = new LinkedHashMap<>();
     public static final Set<Property> PROPERTIES = new HashSet<>();
+
+    private FileConfiguration config;
 
     public Items(BuyerManager manager) {
         this.manager = manager;
@@ -37,8 +38,8 @@ public class Items {
         this.config = manager.getPlugin().getFileConfiguration("prices.yml");
 
         PROPERTIES.clear();
-        sellerItems.clear();
-        categories.clear();
+        SELLER_ITEMS.clear();
+        CATEGORIES.clear();
 
         ConfigurationSection categoriesSection = config.getConfigurationSection("categories");
         if (categoriesSection != null) {
@@ -46,7 +47,7 @@ public class Items {
                 for (String name : categoriesSection.getStringList(category)) {
                     try {
                         Material material = Material.valueOf(name);
-                        categories.put(material, category);
+                        CATEGORIES.put(material, category);
                     } catch (IllegalArgumentException e) {
                         LOGGER.error(manager.getPlugin(), "Invalid material in category " + category + ": " + name);
                     }
@@ -75,18 +76,20 @@ public class Items {
                 }
             }
 
-            if (sellerItems.containsKey(key) || (sellerItems.get(key) != null && material == sellerItems.get(key).material()))
+            if (SELLER_ITEMS.containsKey(key) || (SELLER_ITEMS.get(key) != null && material == SELLER_ITEMS.get(key).material()))
                 continue;
 
             double price = config.getDouble(key + ".price", 0.0);
             double score = config.getDouble(key + ".add-scores", 0);
 
-            Set<Property> properties = getProperties(config.getConfigurationSection(key));
+            LinkedHashSet<Property> properties = getProperties(config.getConfigurationSection(key));
 
+            Object model = CustomModelDataUtil.parse(config.getConfigurationSection(key), "custom-model-data");
 
-            sellerItems.put(key, new SellerItem(key,
+            SELLER_ITEMS.put(key, new SellerItem(key,
                     material,
-                    categories.getOrDefault(material, "none"),
+                    model,
+                    CATEGORIES.getOrDefault(material, "none"),
                     price, score,
                     properties));
 
@@ -95,8 +98,8 @@ public class Items {
     }
 
 
-    private Set<Property> getProperties(ConfigurationSection config) {
-        Set<Property> properties = new HashSet<>();
+    private LinkedHashSet<Property> getProperties(ConfigurationSection config) {
+        LinkedHashSet<Property> properties = new LinkedHashSet<>();
         ConfigurationSection enchantmentsSection = config.getConfigurationSection("enchantments");
         if (enchantmentsSection != null) {
             for (String enchantName : enchantmentsSection.getKeys(false)) {
@@ -127,18 +130,18 @@ public class Items {
     }
 
     public String getCategory(Material material) {
-        return categories.getOrDefault(material, "unknown");
+        return CATEGORIES.getOrDefault(material, "unknown");
     }
 
     public List<Material> getMaterials(String category) {
-        return categories.entrySet().stream()
+        return CATEGORIES.entrySet().stream()
                 .filter(e -> e.getValue().equalsIgnoreCase(category))
                 .map(Map.Entry::getKey)
                 .toList();
     }
 
     public SellerItem getItemByMaterial(Material material) {
-        return getSellerItems().values()
+        return SELLER_ITEMS.values()
                 .stream()
                 .filter(sellerItem -> sellerItem.material() == material)
                 .findFirst()
@@ -146,7 +149,7 @@ public class Items {
     }
 
     public double getScoreAmount(Material material) {
-        SellerItem item = getSellerItems().values()
+        SellerItem item = SELLER_ITEMS.values()
                 .stream()
                 .filter(sellerItem -> sellerItem.material() == material)
                 .findFirst()
@@ -156,7 +159,7 @@ public class Items {
     }
 
     public double getOriginalPrice(Material material) {
-        SellerItem item = getSellerItems().values()
+        SellerItem item = SELLER_ITEMS.values()
                 .stream()
                 .filter(sellerItem -> sellerItem.material() == material)
                 .findFirst()
@@ -166,7 +169,7 @@ public class Items {
     }
 
     public Score createScore() {
-        return manager.getCfg().getType().createScore(categories);
+        return manager.getCfg().getType().createScore();
     }
 
 }

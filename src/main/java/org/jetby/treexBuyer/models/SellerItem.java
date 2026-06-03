@@ -2,14 +2,15 @@ package org.jetby.treexBuyer.models;
 
 import org.bukkit.Material;
 
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 public record SellerItem(
         String id,
         Material material,
+        Object model,
         String category,
         double price,
         double addScore,
-        Set<Property> properties
+        LinkedHashSet<Property> properties
 ) {
 }

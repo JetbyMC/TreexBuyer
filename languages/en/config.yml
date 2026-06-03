@@ -26,6 +26,10 @@ storage:
   username: "root"
   password: ""
 
+gui:
+  # Items with enchantments or effects—each distinct variation is duplicated as a separate item in the GUI.
+  duplicate-by-rule: true
+
 autobuy:
   enable: true
   delay: 60  # In ticks. How often auto-sell triggers. Default 60 = 3 seconds
@@ -48,7 +52,7 @@ disallowed-item:
   # If the item has a custom container (most plugins add containers to distinguish custom items from vanilla ones)
   persistent-data-container: true
   # If the item uses a custom model
-  custom-model-data: true
+  custom-model-data: false
   # If the item has flags (e.g., HIDE_ATTRIBUTES)
   item-flags: true
 

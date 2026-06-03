@@ -10,10 +10,11 @@ import org.jetby.libb.command.annotations.SubCommand;
 import org.jetby.libb.command.annotations.TabComplete;
 import org.jetby.libb.command.annotations.messages.InsufficientArgs;
 import org.jetby.libb.platform.PlatformSender;
-import org.jetby.libb.util.Logger;
 import org.jetby.treexBuyer.configurations.Config;
 import org.jetby.treexBuyer.configurations.GuiLoader;
+import org.jetby.treexBuyer.configurations.Items;
 import org.jetby.treexBuyer.menus.BuyerGui;
+import org.jetby.treexBuyer.models.SellerItem;
 import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.storage.score.Score;
 import org.jetby.treexBuyer.storage.score.ScoreType;
@@ -153,7 +154,8 @@ public class BuyerCommand extends AdvancedCommand {
             if (type == ScoreType.GLOBAL) return List.of();
             if (type == ScoreType.ITEM)
                 return Arrays.stream(Material.values()).map(m -> m.name().toLowerCase()).toList();
-            if (type == ScoreType.CATEGORY) return new ArrayList<>(manager.getItems().getCategories().values());
+            // todo test
+            if (type == ScoreType.CATEGORY) return Items.SELLER_ITEMS.values().stream().map(SellerItem::category).toList();
         }
         return List.of();
     }
@@ -203,7 +205,7 @@ public class BuyerCommand extends AdvancedCommand {
                     PlatformSender.sendMessage(sender, Config.SERIALIZER.deserialize("<#EF473A>Invalid material: " + key));
                     return;
                 }
-            } else if (scoreType == ScoreType.CATEGORY && !manager.getItems().getCategories().containsValue(key)) {
+            } else if (scoreType == ScoreType.CATEGORY && !Items.CATEGORIES.containsValue(key)) {
                 PlatformSender.sendMessage(sender, Config.SERIALIZER.deserialize("<#EF473A>Invalid category key: " + key));
                 return;
             }

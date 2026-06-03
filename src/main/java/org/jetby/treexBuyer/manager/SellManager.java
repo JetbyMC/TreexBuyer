@@ -12,6 +12,7 @@ import org.jetby.treexBuyer.configurations.Items;
 import org.jetby.treexBuyer.models.Property;
 import org.jetby.treexBuyer.models.SellerItem;
 import org.jetby.treexBuyer.models.UserData;
+import org.jetby.treexBuyer.tools.CustomModelDataUtil;
 
 
 public class SellManager {
@@ -24,6 +25,10 @@ public class SellManager {
         if (!isRegularItem(item)) return;
         SellerItem sellerItem = BuyerManager.MANAGER.getItems().getItemByMaterial(item.getType());
         if (sellerItem == null) return;
+
+        if (sellerItem.model() != null) {
+            if (!CustomModelDataUtil.matches(item.getItemMeta(), sellerItem.model())) return;
+        }
 
         double price = countPrice(player, item);
         double score = countScore(item);
@@ -59,6 +64,11 @@ public class SellManager {
         SellerItem sellerItem = BuyerManager.MANAGER.getItems().getItemByMaterial(item.getType());
         if (sellerItem == null) return 0.0;
 
+        if (sellerItem.model() != null) {
+            if (!CustomModelDataUtil.matches(item.getItemMeta(), sellerItem.model())) return 0.0;
+        }
+
+
         double pricePerItem = BuyerManager.MANAGER.getCoefficientManager().getPriceWithCoefficient(player, item.getType());
         for (Property property : Items.PROPERTIES) {
             if (sellerItem.properties().contains(property)) continue;
@@ -81,6 +91,10 @@ public class SellManager {
         SellerItem sellerItem = BuyerManager.MANAGER.getItems().getItemByMaterial(item.getType());
         if (sellerItem == null) return 0.0;
 
+        if (sellerItem.model() != null) {
+            if (!CustomModelDataUtil.matches(item.getItemMeta(), sellerItem.model())) return 0.0;
+        }
+
         double scorePerItem = sellerItem.addScore();
         for (Property property : Items.PROPERTIES) {
             if (sellerItem.properties().contains(property)) continue;
@@ -95,6 +109,26 @@ public class SellManager {
         }
 
         return scorePerItem * item.getAmount();
+    }
+
+    public static double countPrice(Player player) {
+        Inventory inv = player.getInventory();
+        double total = 0.0;
+        for (ItemStack item : inv.getContents()) {
+            if (item == null) continue;
+            total += SellManager.countPrice(player, item);
+        }
+        return total;
+    }
+
+    public static double countScore(Player player) {
+        Inventory inv = player.getInventory();
+        double total = 0.0;
+        for (ItemStack item : inv.getContents()) {
+            if (item == null) continue;
+            total += SellManager.countScore(item);
+        }
+        return total;
     }
 
     public static boolean isRegularItem(@NotNull ItemStack item) {

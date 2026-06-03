@@ -3,6 +3,7 @@ package org.jetby.treexBuyer.storage.score.types;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.bukkit.Material;
+import org.jetby.treexBuyer.configurations.Items;
 import org.jetby.treexBuyer.storage.score.Score;
 
 import java.util.Map;
@@ -11,14 +12,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CategoryScore implements Score {
 
     private final Map<String, Double> scores = new ConcurrentHashMap<>();
-    private final Map<Material, String> categoryMap;
 
-    public CategoryScore(Map<Material, String> categoryMap) {
-        this.categoryMap = categoryMap;
-    }
 
     private String getCategory(Material material) {
-        return categoryMap.getOrDefault(material, "unknown");
+        return Items.CATEGORIES.getOrDefault(material, "unknown");
     }
 
     @Override

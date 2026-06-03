@@ -14,14 +14,15 @@ import org.jetby.libb.gui.parser.ParsedGui;
 import org.jetby.libb.gui.parser.ParserContext;
 import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.configurations.Config;
+import org.jetby.treexBuyer.configurations.Items;
 import org.jetby.treexBuyer.manager.SellManager;
+import org.jetby.treexBuyer.models.Property;
+import org.jetby.treexBuyer.models.SellerItem;
 import org.jetby.treexBuyer.models.UserData;
+import org.jetby.treexBuyer.models.properties.EnchantmentProperty;
 import org.jetby.treexBuyer.tools.NumberUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class BuyerGui extends ParsedGui {
@@ -147,43 +148,63 @@ public class BuyerGui extends ParsedGui {
 
 
     private List<Item> expandCategoryItem(Item template, String category) {
-        List<Material> materials = manager.getItems().getMaterials(category);
+        List<SellerItem> items = Items.SELLER_ITEMS.values().stream()
+                .filter(item -> item.category().equalsIgnoreCase(category))
+                .toList();
+
         List<Integer> slots = template.slots();
         List<Item> result = new ArrayList<>();
 
-        for (int i = 0; i < Math.min(materials.size(), slots.size()); i++) {
-            Material mat = materials.get(i);
-            int slot = slots.get(i);
+        int slotIndex = 0;
+        for (SellerItem sellerItem : items) {
+            if (slotIndex >= slots.size()) break;
 
-            double price = manager.getItems().getOriginalPrice(mat);
-            double priceWithCoeff = manager.getCoefficientManager().getPriceWithCoefficient(player, mat);
-
-            Item copy = cloneWithMaterial(template, mat, slot, price, priceWithCoeff);
-            result.add(copy);
+            if (sellerItem.properties().isEmpty()) {
+                Item copy = cloneWithMaterial(template, slots.get(slotIndex++), sellerItem.material(), sellerItem.price(), null);
+                result.add(copy);
+                continue;
+            }
+            for (Property property : sellerItem.properties()) {
+                if (slotIndex >= slots.size()) break;
+                Item copy = cloneWithMaterial(template, slots.get(slotIndex++), sellerItem.material(), sellerItem.price() + property.extraPrice(), property);
+                result.add(copy);
+            }
         }
 
         return result;
     }
 
 
-    private Item cloneWithMaterial(Item template, Material mat, int slot,
-                                   double price, double priceWithCoeff) {
-        Item copy = new Item(new ItemStack(mat));
+    private Item cloneWithMaterial(Item template, int slot, Material material, double price, Property property) {
+
+        double priceWithCoeff = manager.getCoefficientManager().getPriceWithCoefficient(player, price, material);
+        Item copy = new Item(new ItemStack(material));
         copy.slots(List.of(slot));
         copy.section(template.section());
         copy.onClick(template.onClick());
         copy.priority(template.priority());
         copy.viewRequirements(template.viewRequirements());
         copy.flags(template.flags());
-        copy.enchanted(user.getAutoBuyItems().contains(mat));
+
+        if (property instanceof EnchantmentProperty p) {
+            if (copy.enchantments() == null) {
+                copy.enchantments(new ArrayList<>());
+            }
+            copy.enchantments().add(p.enchantment());
+        }
+
+
+        if (copy.enchantments() == null) {
+            copy.enchanted(user.getAutoBuyItems().contains(material));
+        }
 
         if (template.displayName() != null) {
-            copy.displayName(substitutePrice(template.displayName(), price, priceWithCoeff, mat));
+            copy.displayName(substitutePrice(template.displayName(), price, priceWithCoeff, material));
         }
 
         if (template.lore() != null) {
             copy.lore(template.lore().stream()
-                    .map(line -> substitutePrice(line, price, priceWithCoeff, mat))
+                    .map(line -> substitutePrice(line, price, priceWithCoeff, material))
                     .collect(java.util.stream.Collectors.toList()));
         }
 
