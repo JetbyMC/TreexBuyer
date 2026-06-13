@@ -63,25 +63,24 @@ public class BuyerCommand extends AdvancedCommand {
     @Permission("treexbuyer.admin")
     @InsufficientArgs("<#EF473A>Usage: /treexbuyer booster <player/global> <booster> <duration seconds>")
     public void booster(CommandSender sender, String[] args) {
-        if (args.length!=3) return;
+        if (args.length != 3) return;
         String playerName = args[0];
         String booster = args[1].toLowerCase();
         int time = Integer.parseInt(args[2]);
         if (playerName.equalsIgnoreCase("global")) {
             if (BoostersConfiguration.BOOSTERS.containsKey(booster)) {
                 BoosterBossBar.run(BoostersConfiguration.BOOSTERS.get(booster), time);
-                sender.sendMessage("&aSuccessfully started Global boost for the next "+time+" seconds");
+                PlatformSender.sendMessage(sender, GeneralConfiguration.SERIALIZER.deserialize("&aSuccessfully started Global boost for the next " + time + " seconds"));
             } else {
-                sender.sendMessage("<#EF473A>Booster not found");
+                PlatformSender.sendMessage(sender, GeneralConfiguration.SERIALIZER.deserialize("<#EF473A>Booster not found"));
             }
-            return;
         } else {
             OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
             if (BoostersConfiguration.BOOSTERS.containsKey(booster)) {
                 BoosterBossBar.run(player, BoostersConfiguration.BOOSTERS.get(booster), time);
-                sender.sendMessage("&aPlayer "+playerName+" just got boost for the next "+time+" seconds");
+                PlatformSender.sendMessage(sender, GeneralConfiguration.SERIALIZER.deserialize("&aPlayer " + playerName + " just got boost for the next " + time + " seconds"));
             } else {
-                sender.sendMessage("<#EF473A>Booster not found");
+                PlatformSender.sendMessage(sender, GeneralConfiguration.SERIALIZER.deserialize("<#EF473A>Booster not found"));
             }
         }
 
@@ -124,7 +123,7 @@ public class BuyerCommand extends AdvancedCommand {
                 manager.getActionBarUtil().start();
 
             } catch (Exception ex) {
-                LOGGER.error(manager.getPlugin(), "Error with config reloading: " + ex);
+                LOGGER.error("Error with config reloading: " + ex);
                 PlatformSender.sendMessage(sender, GeneralConfiguration.SERIALIZER.deserialize("<#EF473A>Error: " + ex.getMessage()));
                 return;
             }
@@ -176,7 +175,8 @@ public class BuyerCommand extends AdvancedCommand {
             if (type == ScoreType.ITEM)
                 return Arrays.stream(Material.values()).map(m -> m.name().toLowerCase()).toList();
             // todo test
-            if (type == ScoreType.CATEGORY) return ItemsConfiguration.SELLER_ITEMS.values().stream().map(SellerItem::category).toList();
+            if (type == ScoreType.CATEGORY)
+                return ItemsConfiguration.SELLER_ITEMS.values().stream().map(SellerItem::category).toList();
         }
         return List.of();
     }
@@ -206,7 +206,8 @@ public class BuyerCommand extends AdvancedCommand {
                 amount = Double.parseDouble(key);
                 if (amount < 0) throw new NumberFormatException();
                 keyIsAmount = true;
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
 
             if (keyIsAmount) {
                 // /tb score take <player> <amount> — no key
@@ -226,8 +227,9 @@ public class BuyerCommand extends AdvancedCommand {
                     return;
                 }
                 if (scoreType == ScoreType.ITEM) {
-                    try { Material.valueOf(key.toUpperCase()); }
-                    catch (IllegalArgumentException e) {
+                    try {
+                        Material.valueOf(key.toUpperCase());
+                    } catch (IllegalArgumentException e) {
                         PlatformSender.sendMessage(sender, GeneralConfiguration.SERIALIZER.deserialize("<#EF473A>Invalid material: " + key));
                         return;
                     }
@@ -242,7 +244,6 @@ public class BuyerCommand extends AdvancedCommand {
         Score score = user.getScore();
         String finalKey = key;
         double finalAmount = amount;
-
 
         switch (action) {
             case "give" -> {

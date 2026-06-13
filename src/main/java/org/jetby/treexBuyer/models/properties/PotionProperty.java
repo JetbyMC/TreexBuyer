@@ -25,7 +25,7 @@ public record PotionProperty(int level,
     @Override
     public boolean match(ItemStack item) {
         Material type = item.getType();
-        boolean isPotion = type == Material.POTION || type==Material.SPLASH_POTION || type == Material.LINGERING_POTION;
+        boolean isPotion = type == Material.POTION || type == Material.SPLASH_POTION || type == Material.LINGERING_POTION;
         boolean isOminous = type.name().equalsIgnoreCase("OMINOUS_BOTTLE");
 
         if (!isPotion && !isOminous) return false;

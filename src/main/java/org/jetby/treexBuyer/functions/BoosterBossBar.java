@@ -138,6 +138,7 @@ public class BoosterBossBar {
             players.add(player.getUniqueId());
 
         }
+
         public void addPlayer(Player player) {
             players.add(player.getUniqueId());
             bossBar.addPlayer(player);

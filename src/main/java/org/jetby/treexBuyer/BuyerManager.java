@@ -61,22 +61,22 @@ public final class BuyerManager {
         MANAGER = this;
 
 
-        LOGGER.info(plugin, Bukkit.getVersion());
-        LOGGER.info(plugin, "------------------------");
+        Logger.info(plugin, Bukkit.getVersion());
+        Logger.info(plugin, "------------------------");
         new VersionUtil(plugin, plugin.getDescription().getVersion(), "https://raw.githubusercontent.com/MrJetby/TreexBuyer/refs/heads/master/VERSION", "treexbuyer.auto-update");
         this.economy = Vault.setupEconomy(plugin);
         if (economy == null) return;
 
-        LOGGER.info(plugin, "<green>Enabling TreexBuyer...");
+        Logger.info(plugin, "<green>Enabling TreexBuyer...");
 
         new Metrics(plugin, 25141);
 
         try {
             cfg = new GeneralConfiguration(this);
             cfg.load();
-            LOGGER.info(plugin, "<green>✔ Config");
+            Logger.info(plugin, "<green>✔ Config");
         } catch (Exception e) {
-            LOGGER.error(plugin, "<red>✘ Config");
+            Logger.error(plugin, "<red>✘ Config");
             e.printStackTrace();
         }
 
@@ -84,26 +84,26 @@ public final class BuyerManager {
         try {
             items = new ItemsConfiguration(this);
             items.load();
-            LOGGER.info(plugin, "<green>✔ Items");
+            Logger.info(plugin, "<green>✔ Items");
         } catch (Exception e) {
-            LOGGER.error(plugin, "<red>✘ Items");
+            Logger.error(plugin, "<red>✘ Items");
             e.printStackTrace();
         }
         try {
             boosters = new BoostersConfiguration(this);
             boosters.load();
-            LOGGER.info(plugin, "<green>✔ Boosters");
+            Logger.info(plugin, "<green>✔ Boosters");
         } catch (Exception e) {
-            LOGGER.error(plugin, "<red>✘ Boosters");
+            Logger.error(plugin, "<red>✘ Boosters");
             e.printStackTrace();
         }
 
         try {
             guiLoader = new GuiLoader(this);
             guiLoader.loadGuis();
-            LOGGER.info(plugin, "<green>✔ Guis (" + GuiLoader.ALL_GUIS.size() + " menus)");
+            Logger.info(plugin, "<green>✔ Guis (" + GuiLoader.ALL_GUIS.size() + " menus)");
         } catch (Exception e) {
-            LOGGER.error(plugin, "<red>✘ Guis");
+            Logger.error(plugin, "<red>✘ Guis");
             e.printStackTrace();
         }
 
@@ -125,9 +125,9 @@ public final class BuyerManager {
             inventoryPrice.load();
 
             this.isProtocol = true;
-            LOGGER.info(plugin, "<green>✔ ProtocolLib");
+            Logger.info(plugin, "<green>✔ ProtocolLib");
         } catch (Exception e) {
-            LOGGER.error(plugin, "<red>✘ ProtocolLib not found. Inventory price not going to work.");
+            Logger.error(plugin, "<red>✘ ProtocolLib not found. Inventory price not going to work.");
             e.printStackTrace();
         }
 
@@ -138,9 +138,9 @@ public final class BuyerManager {
             treexBuyerPlaceholder = new TreexBuyerPlaceholder(this);
             treexBuyerPlaceholder.register();
 
-            LOGGER.info(plugin, "<green>✔ PlaceholderAPI");
+            Logger.info(plugin, "<green>✔ PlaceholderAPI");
         } catch (Exception e) {
-            LOGGER.error(plugin, e.getMessage());
+            Logger.error(plugin, e.getMessage());
             Bukkit.getPluginManager().disablePlugin(plugin);
             return;
         }
@@ -149,9 +149,9 @@ public final class BuyerManager {
 
         new BuyerCommand(this).register();
 
-        LOGGER.info(plugin, "");
-        LOGGER.info(plugin, "<green>Plugin was successfully enabled, enjoy it :)");
-        LOGGER.info(plugin, "------------------------");
+        Logger.info(plugin, "");
+        Logger.info(plugin, "<green>Plugin was successfully enabled, enjoy it :)");
+        Logger.info(plugin, "------------------------");
 
     }
 

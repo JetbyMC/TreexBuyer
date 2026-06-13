@@ -2,7 +2,6 @@ package org.jetby.treexBuyer.configurations;
 
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetby.libb.action.record.ActionBlock;
@@ -28,7 +27,7 @@ public class BoostersConfiguration {
 
         for (String key : configuration.getKeys(false)) {
             ConfigurationSection section = configuration.getConfigurationSection(key);
-            if (section==null) continue;
+            if (section == null) continue;
             String permission = section.getString("permission");
             double coefficient = section.getDouble("external-coefficient", 0.0);
             boolean boosters_except_legal_coefficient = section.getBoolean("boosters_except_legal_coefficient");
@@ -38,7 +37,7 @@ public class BoostersConfiguration {
             // bossbar
             ConfigurationSection bossbar = section.getConfigurationSection("bossbar");
             Boost.BossBarInfo bossBarInfo = null;
-            if (bossbar!=null) {
+            if (bossbar != null) {
                 boolean enable = true;
                 String title = bossbar.getString("title");
                 BarStyle style = BarStyle.valueOf(bossbar.getString("style", "SOLID").toUpperCase());

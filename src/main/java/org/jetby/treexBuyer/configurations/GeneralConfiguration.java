@@ -11,12 +11,9 @@ import org.jetby.libb.color.Serializer;
 import org.jetby.libb.color.SerializerType;
 import org.jetby.libb.gui.parser.ParseUtil;
 import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.models.Boost;
 import org.jetby.treexBuyer.storage.score.ScoreType;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 public class GeneralConfiguration {

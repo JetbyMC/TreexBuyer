@@ -13,7 +13,7 @@ public record Boost(
         boolean boosters_except_legal_coefficient,
         ActionBlock on_start_player,
         ActionBlock on_start_global,
-       @Nullable BossBarInfo bossBarInfo
+        @Nullable BossBarInfo bossBarInfo
 
 ) {
     public record BossBarInfo(
@@ -21,5 +21,6 @@ public record Boost(
             String title,
             BarStyle style,
             BarColor color
-    ) {}
+    ) {
+    }
 }

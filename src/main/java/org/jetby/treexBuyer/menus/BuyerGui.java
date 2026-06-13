@@ -9,7 +9,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.InstanceFactory;
-import org.jetby.libb.gui.item.ItemWrapper;
 import org.jetby.libb.gui.parser.Item;
 import org.jetby.libb.gui.parser.ParseUtil;
 import org.jetby.libb.gui.parser.ParsedGui;
@@ -192,7 +191,7 @@ public class BuyerGui extends ParsedGui {
         copy.flags(template.flags());
         copy.customModelData(template.customModelData());
 
-        if (property!=null) {
+        if (property != null) {
             if (property instanceof EnchantmentProperty p) {
                 copy.enchantments(Map.of(p.enchantment(), p.level()));
             }

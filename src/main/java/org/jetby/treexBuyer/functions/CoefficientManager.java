@@ -35,7 +35,7 @@ public class CoefficientManager {
                             .findFirst()
                             .orElse(null);
 
-                    if (data!=null) {
+                    if (data != null) {
                         return true;
                     }
 

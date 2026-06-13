@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
+import org.jetby.libb.util.Logger;
 import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.models.UserData;
 
@@ -69,7 +70,7 @@ public class MySQLStorage
             if (!rs.next()) return new UserData(uuid, manager.getItems().createScore());
             return parseRow(rs);
         } catch (SQLException e) {
-            LOGGER.warn(manager.getPlugin(), "Failed to load user " + uuid + ": " + e.getMessage());
+            Logger.warn(manager.getPlugin(), "Failed to load user " + uuid + ": " + e.getMessage());
         }
         return new UserData(uuid, manager.getItems().createScore());
     }
@@ -121,7 +122,7 @@ public class MySQLStorage
                 ps.setString(1, uuid.toString());
                 ps.executeUpdate();
             } catch (SQLException e) {
-                LOGGER.warn(manager.getPlugin(), "Failed to delete user " + uuid + ": " + e.getMessage());
+                Logger.warn(manager.getPlugin(), "Failed to delete user " + uuid + ": " + e.getMessage());
             }
         });
     }
@@ -153,7 +154,7 @@ public class MySQLStorage
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
-            LOGGER.warn(manager.getPlugin(), "Failed to create table: " + e.getMessage());
+            Logger.warn(manager.getPlugin(), "Failed to create table: " + e.getMessage());
         }
     }
 }

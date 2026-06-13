@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionEffectType;
+import org.jetby.libb.util.Logger;
 import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.models.Property;
 import org.jetby.treexBuyer.models.SellerItem;
@@ -52,16 +53,17 @@ public class ItemsConfiguration {
                             try {
                                 material = Material.valueOf(materialName.toUpperCase());
                             } catch (IllegalArgumentException e) {
-                                LOGGER.error(manager.getPlugin(), "Invalid material in prices.yml: " + name);
+                                Logger.error(manager.getPlugin(), "Invalid material in prices.yml: " + name);
                             }
                         } else {
                             try {
                                 material = Material.valueOf(name.toUpperCase());
-                            } catch (IllegalArgumentException ignore) {}
+                            } catch (IllegalArgumentException ignore) {
+                            }
                         }
                         CATEGORIES.put(material, category);
                     } catch (IllegalArgumentException e) {
-                        LOGGER.error(manager.getPlugin(), "Invalid material in category " + category + ": " + name);
+                        Logger.error(manager.getPlugin(), "Invalid material in category " + category + ": " + name);
                     }
                 }
             }
@@ -79,12 +81,13 @@ public class ItemsConfiguration {
                 try {
                     material = Material.valueOf(materialName.toUpperCase());
                 } catch (IllegalArgumentException e) {
-                    LOGGER.error(manager.getPlugin(), "Invalid material in prices.yml: " + key);
+                    Logger.error(manager.getPlugin(), "Invalid material in prices.yml: " + key);
                 }
             } else {
                 try {
                     material = Material.valueOf(key.toUpperCase());
-                } catch (IllegalArgumentException ignore) {}
+                } catch (IllegalArgumentException ignore) {
+                }
             }
 
             if (SELLER_ITEMS.containsKey(key) || (SELLER_ITEMS.get(key) != null && material == SELLER_ITEMS.get(key).material()))

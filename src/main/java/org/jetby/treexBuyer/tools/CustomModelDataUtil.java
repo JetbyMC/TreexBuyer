@@ -42,13 +42,15 @@ public class CustomModelDataUtil {
                     if (section.contains("flags"))
                         component.setFlags(section.getBooleanList("flags"));
                 }
-                default -> {}
+                default -> {
+                }
             }
 
             meta.setCustomModelDataComponent(component);
         } catch (Exception ignored) {
         }
     }
+
     public static boolean matches(ItemMeta meta, Object model) {
         if (model == null) return true;
         if (meta == null) return false;
@@ -71,10 +73,12 @@ public class CustomModelDataUtil {
                 return !section.contains("floats") || component.getFloats().containsAll(
                         section.getDoubleList("floats").stream().map(Double::floatValue).toList());
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         return false;
     }
+
     public static Object parse(ConfigurationSection section, String key) {
         Object raw = section.get(key);
         return switch (raw) {
