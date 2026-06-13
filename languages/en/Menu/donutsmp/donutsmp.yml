@@ -19,4 +19,8 @@ on_close:
         - '[sound] block.dripstone_block.break'
         - '[message] <gray>Nothing to sell'
 
-Items: []
+Items:
+  counter:
+    slot: 53
+    display_name: "<white>Items worth: <gray>$%sell_pay_commas% <white>and <yellow>%sell_score_commas% <white>points"
+    material: lime_stained_glass_pane

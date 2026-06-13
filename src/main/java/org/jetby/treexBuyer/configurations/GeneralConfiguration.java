@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
-public class Config {
+public class GeneralConfiguration {
 
     private String storageType;
     private ScoreType type;
@@ -46,10 +46,8 @@ public class Config {
     private boolean persistentActionbar;
     private Component persistentActionbarText;
 
-    private final Map<String, Boost> boosts = new HashMap<>();
     private FileConfiguration config;
     public static Serializer SERIALIZER;
-
 
     private boolean disallowedItemCustomName;
     private boolean disallowedItemLore;
@@ -57,10 +55,11 @@ public class Config {
     private boolean disallowedItemModelData;
     private boolean disallowedItemItemFlags;
 
+    private boolean guiDuplicateByRule;
 
     private final BuyerManager manager;
 
-    public Config(BuyerManager manager) {
+    public GeneralConfiguration(BuyerManager manager) {
         this.manager = manager;
     }
 
@@ -113,18 +112,10 @@ public class Config {
         disallowedItemModelData = config.getBoolean("disallowed-item.custom-model-data", true);
         disallowedItemItemFlags = config.getBoolean("disallowed-item.item-flags", true);
 
+        guiDuplicateByRule = config.getBoolean("gui.duplicate-by-rule", true);
 
-        loadBoosts(ss);
+
     }
 
-    public void loadBoosts(ConfigurationSection cfg) {
-        boosts.clear();
-        ConfigurationSection boosterSection = cfg.getConfigurationSection("booster");
-        if (boosterSection == null) return;
-        for (String key : boosterSection.getKeys(false)) {
-            String permission = boosterSection.getString(key + ".permission");
-            double coeff = boosterSection.getDouble(key + ".external-coefficient", 0.0);
-            boosts.put(key, new Boost(key, permission, coeff));
-        }
-    }
+
 }

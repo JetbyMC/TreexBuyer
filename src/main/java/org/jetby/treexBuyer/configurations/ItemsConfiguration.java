@@ -20,7 +20,7 @@ import java.util.*;
 import static org.jetby.treexBuyer.BuyerManager.LOGGER;
 
 @Getter
-public class Items {
+public class ItemsConfiguration {
 
     private final BuyerManager manager;
 
@@ -30,7 +30,7 @@ public class Items {
 
     private FileConfiguration config;
 
-    public Items(BuyerManager manager) {
+    public ItemsConfiguration(BuyerManager manager) {
         this.manager = manager;
     }
 
@@ -46,7 +46,19 @@ public class Items {
             for (String category : categoriesSection.getKeys(false)) {
                 for (String name : categoriesSection.getStringList(category)) {
                     try {
-                        Material material = Material.valueOf(name);
+                        String materialName = config.getString(name + ".material");
+                        Material material = null;
+                        if (materialName != null) {
+                            try {
+                                material = Material.valueOf(materialName.toUpperCase());
+                            } catch (IllegalArgumentException e) {
+                                LOGGER.error(manager.getPlugin(), "Invalid material in prices.yml: " + name);
+                            }
+                        } else {
+                            try {
+                                material = Material.valueOf(name.toUpperCase());
+                            } catch (IllegalArgumentException ignore) {}
+                        }
                         CATEGORIES.put(material, category);
                     } catch (IllegalArgumentException e) {
                         LOGGER.error(manager.getPlugin(), "Invalid material in category " + category + ": " + name);
@@ -72,8 +84,7 @@ public class Items {
             } else {
                 try {
                     material = Material.valueOf(key.toUpperCase());
-                } catch (IllegalArgumentException ignore) {
-                }
+                } catch (IllegalArgumentException ignore) {}
             }
 
             if (SELLER_ITEMS.containsKey(key) || (SELLER_ITEMS.get(key) != null && material == SELLER_ITEMS.get(key).material()))

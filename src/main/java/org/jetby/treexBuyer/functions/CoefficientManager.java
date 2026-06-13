@@ -3,7 +3,7 @@ package org.jetby.treexBuyer.functions;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.configurations.Items;
+import org.jetby.treexBuyer.configurations.BoostersConfiguration;
 import org.jetby.treexBuyer.models.Boost;
 import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.storage.score.Score;
@@ -26,10 +26,24 @@ public class CoefficientManager {
         double earned = relevantScore / manager.getCfg().getScores() * manager.getCfg().getCoefficient();
         double base = manager.getCfg().getDefaultCoefficient() + earned;
         double legal = Math.min(base, manager.getCfg().getMaxCoefficient());
-        double boost = manager.getCfg().getBoosts().values().stream()
-                .filter(b -> b.permission() != null && player.hasPermission(b.permission()))
+        double boost = BoostersConfiguration.BOOSTERS.values().stream()
+                .filter(b -> {
+                    if (b.permission() == null) return false;
+
+                    BoosterBossBar.BossBarData data = BoosterBossBar.CURRENT_BOOSTERS.stream()
+                            .filter(d -> d.getPlayers().contains(player.getUniqueId()))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (data!=null) {
+                        return true;
+                    }
+
+                    return player.hasPermission(b.permission());
+                })
                 .mapToDouble(Boost::coefficient)
                 .sum();
+
         return manager.getCfg().isBoosters_except_legal_coefficient()
                 ? legal + boost
                 : Math.min(base + boost, manager.getCfg().getMaxCoefficient());
@@ -48,6 +62,7 @@ public class CoefficientManager {
     public double getPriceWithCoefficient(Player player, Material material) {
         return getPriceWithCoefficient(player, manager.getItems().getOriginalPrice(material), material);
     }
+
     public double getPriceWithCoefficient(Player player, double price, Material material) {
         UserData user = UserData.findByUuid(player.getUniqueId());
         if (user == null) return 0.0;

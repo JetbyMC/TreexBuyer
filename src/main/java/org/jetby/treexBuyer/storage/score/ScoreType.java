@@ -1,12 +1,9 @@
 package org.jetby.treexBuyer.storage.score;
 
-import org.bukkit.Material;
-import org.jetby.treexBuyer.configurations.Items;
 import org.jetby.treexBuyer.storage.score.types.CategoryScore;
 import org.jetby.treexBuyer.storage.score.types.GlobalScore;
 import org.jetby.treexBuyer.storage.score.types.PerItemScore;
 
-import java.util.Map;
 import java.util.function.Supplier;
 
 public enum ScoreType {

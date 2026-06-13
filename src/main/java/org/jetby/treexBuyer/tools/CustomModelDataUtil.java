@@ -71,8 +71,7 @@ public class CustomModelDataUtil {
                 return !section.contains("floats") || component.getFloats().containsAll(
                         section.getDoubleList("floats").stream().map(Double::floatValue).toList());
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
 
         return false;
     }

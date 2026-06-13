@@ -88,11 +88,4 @@ score-system:
   default-coefficient: 1.0
   max-legal-coefficient: 3.0
 
-  # если true, донатные бусты будут обходить значение в max-legal-coefficient
-  boosters_except_legal_coefficient: true
-
-  booster:
-    donat-1: # имя (может быть любым)
-      permission: 'buyer.boost.donat1' # (пермишен по которому будет определяться наличие буста)
-      external-coefficient: 0.5
 

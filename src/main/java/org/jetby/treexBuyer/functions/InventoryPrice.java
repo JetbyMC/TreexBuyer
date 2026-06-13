@@ -47,7 +47,7 @@ public class InventoryPrice implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         if (!manager.getCfg().isInventoryPrice()) return;
         Player player = e.getPlayer();
-        Bukkit.getScheduler().runTaskLater(manager.getPlugin(), player::updateInventory, 5L);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(manager.getPlugin(), player::updateInventory, 5L);
     }
 
     @EventHandler
@@ -57,7 +57,7 @@ public class InventoryPrice implements Listener {
 
         if (player.getGameMode() == GameMode.CREATIVE) return;
 
-        Bukkit.getScheduler().runTaskLater(manager.getPlugin(), player::updateInventory, 1L);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(manager.getPlugin(), player::updateInventory, 1L);
     }
 
     @EventHandler
@@ -65,7 +65,7 @@ public class InventoryPrice implements Listener {
         if (!manager.getCfg().isInventoryPrice()) return;
         Player player = (Player) e.getWhoClicked();
 
-        Bukkit.getScheduler().runTaskLater(manager.getPlugin(), player::updateInventory, 1L);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(manager.getPlugin(), player::updateInventory, 1L);
     }
 
     @EventHandler
@@ -73,7 +73,7 @@ public class InventoryPrice implements Listener {
         if (!manager.getCfg().isInventoryPrice()) return;
         Player player = e.getPlayer();
 
-        Bukkit.getScheduler().runTaskLater(manager.getPlugin(), player::updateInventory, 1L);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(manager.getPlugin(), player::updateInventory, 1L);
     }
 
     public void load() {

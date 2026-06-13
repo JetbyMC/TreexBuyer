@@ -8,13 +8,15 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetby.libb.InstanceFactory;
+import org.jetby.libb.gui.item.ItemWrapper;
 import org.jetby.libb.gui.parser.Item;
 import org.jetby.libb.gui.parser.ParseUtil;
 import org.jetby.libb.gui.parser.ParsedGui;
 import org.jetby.libb.gui.parser.ParserContext;
 import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.configurations.Config;
-import org.jetby.treexBuyer.configurations.Items;
+import org.jetby.treexBuyer.configurations.GeneralConfiguration;
+import org.jetby.treexBuyer.configurations.ItemsConfiguration;
 import org.jetby.treexBuyer.manager.SellManager;
 import org.jetby.treexBuyer.models.Property;
 import org.jetby.treexBuyer.models.SellerItem;
@@ -32,7 +34,7 @@ public class BuyerGui extends ParsedGui {
     private final UserData user;
 
     public BuyerGui(@NotNull Player viewer, UserData user, @NotNull FileConfiguration config, BuyerManager manager) {
-        super(viewer, config, manager.getPlugin(), ParserContext.of(Config.SERIALIZER));
+        super(viewer, config, manager.getPlugin(), ParserContext.of(GeneralConfiguration.SERIALIZER));
         this.user = user;
         this.manager = manager;
         this.sellSlots = ParseUtil.parseSlots(config.getStringList("sell-slots"));
@@ -67,9 +69,11 @@ public class BuyerGui extends ParsedGui {
         onClose(event -> {
             if (onClose != null)
                 onClose.accept(event);
+
             sellSlots.forEach(slot -> {
                 ItemStack item = event.getInventory().getItem(slot);
                 if (item == null) return;
+                if (item.getItemMeta().getPersistentDataContainer().has(InstanceFactory.GUI_ITEM)) return;
                 player.getInventory().addItem(item);
             });
         });
@@ -148,7 +152,7 @@ public class BuyerGui extends ParsedGui {
 
 
     private List<Item> expandCategoryItem(Item template, String category) {
-        List<SellerItem> items = Items.SELLER_ITEMS.values().stream()
+        List<SellerItem> items = ItemsConfiguration.SELLER_ITEMS.values().stream()
                 .filter(item -> item.category().equalsIgnoreCase(category))
                 .toList();
 
@@ -168,6 +172,7 @@ public class BuyerGui extends ParsedGui {
                 if (slotIndex >= slots.size()) break;
                 Item copy = cloneWithMaterial(template, slots.get(slotIndex++), sellerItem.material(), sellerItem.price() + property.extraPrice(), property);
                 result.add(copy);
+                if (!manager.getCfg().isGuiDuplicateByRule()) break;
             }
         }
 
@@ -177,7 +182,7 @@ public class BuyerGui extends ParsedGui {
 
     private Item cloneWithMaterial(Item template, int slot, Material material, double price, Property property) {
 
-        double priceWithCoeff = manager.getCoefficientManager().getPriceWithCoefficient(player, price, material);
+        double priceWithCoefficient = manager.getCoefficientManager().getPriceWithCoefficient(player, price, material);
         Item copy = new Item(new ItemStack(material));
         copy.slots(List.of(slot));
         copy.section(template.section());
@@ -185,26 +190,24 @@ public class BuyerGui extends ParsedGui {
         copy.priority(template.priority());
         copy.viewRequirements(template.viewRequirements());
         copy.flags(template.flags());
+        copy.customModelData(template.customModelData());
 
-        if (property instanceof EnchantmentProperty p) {
-            if (copy.enchantments() == null) {
-                copy.enchantments(new ArrayList<>());
+        if (property!=null) {
+            if (property instanceof EnchantmentProperty p) {
+                copy.enchantments(Map.of(p.enchantment(), p.level()));
             }
-            copy.enchantments().add(p.enchantment());
         }
 
-
-        if (copy.enchantments() == null) {
+        if (copy.enchantments() == null || copy.enchantments().isEmpty()) {
             copy.enchanted(user.getAutoBuyItems().contains(material));
         }
 
         if (template.displayName() != null) {
-            copy.displayName(substitutePrice(template.displayName(), price, priceWithCoeff, material));
+            copy.displayName(substitutePrice(template.displayName(), price, priceWithCoefficient, material));
         }
-
         if (template.lore() != null) {
             copy.lore(template.lore().stream()
-                    .map(line -> substitutePrice(line, price, priceWithCoeff, material))
+                    .map(line -> substitutePrice(line, price, priceWithCoefficient, material))
                     .collect(java.util.stream.Collectors.toList()));
         }
 
@@ -221,9 +224,7 @@ public class BuyerGui extends ParsedGui {
     }
 
     public List<Material> getVisibleMaterials() {
-        return getInventory().getContents() == null
-                ? List.of()
-                : Arrays.stream(getInventory().getContents())
+        return getInventory().getContents() == null ? List.of() : Arrays.stream(getInventory().getContents())
                 .filter(item -> item != null && !item.getType().isAir())
                 .filter(item -> !getSellSlots().contains(/* slot */ 0))
                 .map(ItemStack::getType)

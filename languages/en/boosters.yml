@@ -1,0 +1,28 @@
+example1:
+  permission: 'buyer.boost.donat1' # (permission used to determine if boost is active)
+  external-coefficient: 0.5
+
+example2:
+  permission: 'buyer.boost.donat2'
+  external-coefficient: 2.5
+
+  # if true, donor boosts will bypass the value in max-legal-coefficient
+  boosters_except_legal_coefficient: true
+
+  on_start_player:
+    - '[message] '
+    - '[message] &6&lBUYER BOOST'
+    - '[message] &fFor the next {time} minutes, item prices at the &6buyer &fare increased by &6&lx{coefficient}'
+    - '[message] '
+
+  on_start_global:
+    - '[message] '
+    - '[message] &6&lGLOBAL BUYER BOOST'
+    - '[message] &fFor the next {time} minutes, item prices at the &6buyer &fare increased by &6&lx{coefficient}'
+    - '[message] '
+
+  bossbar:
+    enable: true
+    title: "&fActive boost of &6&lx{coefficient} &r&fat the buyer &7| &c{time}"
+    style: SOLID
+    color: BLUE

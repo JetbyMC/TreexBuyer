@@ -94,6 +94,7 @@ title: "<black>Seller"
 command:
   - 'seller'
   - 'buyer'
+  - 'sell'
 
 size: 54
 

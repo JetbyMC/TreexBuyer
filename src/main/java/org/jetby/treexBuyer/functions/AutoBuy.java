@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetby.libb.action.ActionContext;
 import org.jetby.libb.action.ActionExecute;
 import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.configurations.Items;
+import org.jetby.treexBuyer.configurations.ItemsConfiguration;
 import org.jetby.treexBuyer.manager.SellManager;
 import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.tools.NumberUtils;
@@ -25,7 +25,7 @@ public class AutoBuy {
         manager.getPlugin().getServer().getScheduler().runTaskTimerAsynchronously(manager.getPlugin(), t -> {
             this.task = t.getTaskId();
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (Items.SELLER_ITEMS.isEmpty()) break;
+                if (ItemsConfiguration.SELLER_ITEMS.isEmpty()) break;
                 UserData user = UserData.findByUuid(player.getUniqueId());
                 if (user == null || !user.isAutoBuy() || player.getInventory().getContents().length == 0) continue;
                 Bukkit.getScheduler().runTask(manager.getPlugin(), () -> checkItems(player));

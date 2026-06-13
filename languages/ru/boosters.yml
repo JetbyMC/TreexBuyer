@@ -1,0 +1,29 @@
+
+example1:
+  permission: 'buyer.boost.donat1' # (пермишен по которому будет определяться наличие буста)
+  external-coefficient: 0.5
+
+example2:
+  permission: 'buyer.boost.donat2'
+  external-coefficient: 2.5
+
+  # если true, донатные бусты будут обходить значение в max-legal-coefficient
+  boosters_except_legal_coefficient: true
+
+  on_start_player:
+    - '[message] '
+    - '[message] &6&lБУСТ СКУПЩИКА'
+    - '[message] &fВ течении следующих {time} минут цены предметов у &6скупщика &fповышены в &6&lx{coefficient} &fраз'
+    - '[message] '
+
+  on_start_global:
+    - '[message] '
+    - '[message] &6&lГЛОБАЛЬНЫЙ БУСТ СКУПЩИКА'
+    - '[message] &fВ течении следующих {time} минут цены предметов у &6скупщика &fповышены в &6&lx{coefficient} &fраз'
+    - '[message] '
+
+  bossbar:
+    enable: true
+    title: "&fДействует буст в размере &6&lx{coefficient} &r&fу скупщика &7| &c{time}"
+    style: SOLID
+    color: BLUE

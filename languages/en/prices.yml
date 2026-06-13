@@ -30,10 +30,21 @@ default-rules:
 
 
 # Example of selling custom items using customModelData
-#custom_item_example1:
-#  model: 123
-#  price: 60.0
-#  add-scores: 5.0
+custom_item_example1:
+  #  custom-model-data: 123
+  #
+  #  custom-model-data: bat
+  #
+  custom-model-data:
+    strings:
+      - bat
+    floats:
+      - 1.5
+    flags:
+      - true
+  material: diamond
+  price: 60.0
+  add-scores: 5.0
 
 # Item prices
 NETHERITE_INGOT:

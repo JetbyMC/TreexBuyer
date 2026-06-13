@@ -93,6 +93,7 @@ id: seller
 title: "<black>Скупщик"
 command:
   - 'seller'
+  - 'sell'
   - 'buyer'
 
 

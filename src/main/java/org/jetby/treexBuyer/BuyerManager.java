@@ -6,18 +6,15 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.action.ActionRegistry;
 import org.jetby.libb.util.Logger;
 import org.jetby.libb.util.Metrics;
 import org.jetby.libb.util.VersionUtil;
-import org.jetby.treexBuyer.configurations.Config;
+import org.jetby.treexBuyer.configurations.BoostersConfiguration;
+import org.jetby.treexBuyer.configurations.GeneralConfiguration;
 import org.jetby.treexBuyer.configurations.GuiLoader;
-import org.jetby.treexBuyer.configurations.Items;
+import org.jetby.treexBuyer.configurations.ItemsConfiguration;
 import org.jetby.treexBuyer.functions.AutoBuy;
 import org.jetby.treexBuyer.functions.CoefficientManager;
 import org.jetby.treexBuyer.functions.InventoryPrice;
@@ -47,18 +44,18 @@ public final class BuyerManager {
 
     @Setter
     private Storage storage;
-    private Config cfg;
-    private Items items;
+    private GeneralConfiguration cfg;
+    private ItemsConfiguration items;
     private CoefficientManager coefficientManager;
+    private BoostersConfiguration boosters;
+
+    private boolean isProtocol = false;
     private AutoBuy autoBuy;
     private InventoryPrice inventoryPrice;
-    @Getter
     @Setter
     private TreexBuyerPlaceholder treexBuyerPlaceholder;
     private GuiLoader guiLoader;
     private PersistentActionBar actionBarUtil;
-
-    private boolean isProtocol = false;
 
     public void onEnable() {
         MANAGER = this;
@@ -75,7 +72,7 @@ public final class BuyerManager {
         new Metrics(plugin, 25141);
 
         try {
-            cfg = new Config(this);
+            cfg = new GeneralConfiguration(this);
             cfg.load();
             LOGGER.info(plugin, "<green>✔ Config");
         } catch (Exception e) {
@@ -85,11 +82,19 @@ public final class BuyerManager {
 
 
         try {
-            items = new Items(this);
+            items = new ItemsConfiguration(this);
             items.load();
             LOGGER.info(plugin, "<green>✔ Items");
         } catch (Exception e) {
             LOGGER.error(plugin, "<red>✘ Items");
+            e.printStackTrace();
+        }
+        try {
+            boosters = new BoostersConfiguration(this);
+            boosters.load();
+            LOGGER.info(plugin, "<green>✔ Boosters");
+        } catch (Exception e) {
+            LOGGER.error(plugin, "<red>✘ Boosters");
             e.printStackTrace();
         }
 

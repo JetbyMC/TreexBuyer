@@ -7,8 +7,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetby.treexBuyer.BuyerManager;
-import org.jetby.treexBuyer.configurations.Config;
-import org.jetby.treexBuyer.configurations.Items;
+import org.jetby.treexBuyer.configurations.GeneralConfiguration;
+import org.jetby.treexBuyer.configurations.ItemsConfiguration;
 import org.jetby.treexBuyer.models.Property;
 import org.jetby.treexBuyer.models.SellerItem;
 import org.jetby.treexBuyer.models.UserData;
@@ -70,7 +70,7 @@ public class SellManager {
 
 
         double pricePerItem = BuyerManager.MANAGER.getCoefficientManager().getPriceWithCoefficient(player, item.getType());
-        for (Property property : Items.PROPERTIES) {
+        for (Property property : ItemsConfiguration.PROPERTIES) {
             if (sellerItem.properties().contains(property)) continue;
             if (property.match(item)) {
                 pricePerItem += property.extraPrice();
@@ -96,7 +96,8 @@ public class SellManager {
         }
 
         double scorePerItem = sellerItem.addScore();
-        for (Property property : Items.PROPERTIES) {
+
+        for (Property property : ItemsConfiguration.PROPERTIES) {
             if (sellerItem.properties().contains(property)) continue;
             if (property.match(item)) {
                 scorePerItem += property.extraScore();
@@ -134,7 +135,7 @@ public class SellManager {
     public static boolean isRegularItem(@NotNull ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return false;
-        Config config = BuyerManager.MANAGER.getCfg();
+        GeneralConfiguration config = BuyerManager.MANAGER.getCfg();
         if (config == null) return true;
         if (config.isDisallowedItemPersistent()) {
             if (!meta.getPersistentDataContainer().isEmpty()) {
