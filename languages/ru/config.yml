@@ -1,4 +1,6 @@
 
+config-version: 1
+
 # Available serializers:
 # LEGACY_AMPERSAND  - "&c&lExample &c&9Text"
 # LEGACY_SECTION    - "§c§lExample §c§9Text"

@@ -34,11 +34,10 @@ public class BoostersConfiguration {
             ActionBlock on_start_player = ParseUtil.getActionBlock(section.getList("on_start_player"));
             ActionBlock on_start_global = ParseUtil.getActionBlock(section.getList("on_start_global"));
 
-            // bossbar
             ConfigurationSection bossbar = section.getConfigurationSection("bossbar");
             Boost.BossBarInfo bossBarInfo = null;
             if (bossbar != null) {
-                boolean enable = true;
+                boolean enable = bossbar.getBoolean("enable", false);
                 String title = bossbar.getString("title");
                 BarStyle style = BarStyle.valueOf(bossbar.getString("style", "SOLID").toUpperCase());
                 BarColor color = BarColor.valueOf(bossbar.getString("color", "RED").toUpperCase());

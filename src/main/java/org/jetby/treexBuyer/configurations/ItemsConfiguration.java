@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionEffectType;
+import org.jetby.libb.util.CustomModelDataUtil;
 import org.jetby.libb.util.Logger;
 import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.models.Property;
@@ -14,11 +15,8 @@ import org.jetby.treexBuyer.models.SellerItem;
 import org.jetby.treexBuyer.models.properties.EnchantmentProperty;
 import org.jetby.treexBuyer.models.properties.PotionProperty;
 import org.jetby.treexBuyer.storage.score.Score;
-import org.jetby.treexBuyer.tools.CustomModelDataUtil;
 
 import java.util.*;
-
-import static org.jetby.treexBuyer.BuyerManager.LOGGER;
 
 @Getter
 public class ItemsConfiguration {

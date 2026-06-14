@@ -62,13 +62,13 @@ public class BoosterBossBar {
 
     }
 
+    @Getter
     public static class BossBarData implements Listener {
 
         private final BossBar bossBar;
         private int time;
         private final Boost boost;
 
-        @Getter
         private boolean global = false;
 
         public void global(boolean global) {
@@ -78,7 +78,6 @@ public class BoosterBossBar {
             }
         }
 
-        @Getter
         private final Set<UUID> players = new HashSet<>();
 
         public BossBarData(Boost boost, int time) {
@@ -135,6 +134,11 @@ public class BoosterBossBar {
         }
 
         public void addPlayer(OfflinePlayer player) {
+            if (player.isOnline()) {
+                addPlayer((Player) player);
+                return;
+            }
+
             players.add(player.getUniqueId());
 
         }
@@ -150,9 +154,11 @@ public class BoosterBossBar {
 
         }
 
-        public void removePlayer(Player player) {
+        public void removePlayer(OfflinePlayer player) {
             players.remove(player.getUniqueId());
-            bossBar.removePlayer(player);
+            if (player.isOnline()) {
+                bossBar.removePlayer((Player) player);
+            }
         }
 
     }

@@ -86,6 +86,17 @@ public class BuyerCommand extends AdvancedCommand {
 
     }
 
+    @TabComplete("booster")
+    public List<String> boosterTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+        } else if (args.length == 2) {
+            return BoostersConfiguration.BOOSTERS.keySet().stream().toList();
+        } else if (args.length == 3) {
+            return List.of("100", "300", "500", "1000", "3600", "86400");
+        }
+        return List.of();
+    }
 
     @SubCommand({"open"})
     @Permission("treexbuyer.admin")
@@ -174,7 +185,6 @@ public class BuyerCommand extends AdvancedCommand {
             if (type == ScoreType.GLOBAL) return List.of();
             if (type == ScoreType.ITEM)
                 return Arrays.stream(Material.values()).map(m -> m.name().toLowerCase()).toList();
-            // todo test
             if (type == ScoreType.CATEGORY)
                 return ItemsConfiguration.SELLER_ITEMS.values().stream().map(SellerItem::category).toList();
         }

@@ -6,13 +6,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetby.libb.util.CustomModelDataUtil;
 import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.configurations.GeneralConfiguration;
 import org.jetby.treexBuyer.configurations.ItemsConfiguration;
 import org.jetby.treexBuyer.models.Property;
 import org.jetby.treexBuyer.models.SellerItem;
 import org.jetby.treexBuyer.models.UserData;
-import org.jetby.treexBuyer.tools.CustomModelDataUtil;
 
 
 public class SellManager {

@@ -16,7 +16,8 @@ import org.jetby.treexBuyer.configurations.GeneralConfiguration;
 import org.jetby.treexBuyer.configurations.GuiLoader;
 import org.jetby.treexBuyer.configurations.ItemsConfiguration;
 import org.jetby.treexBuyer.functions.AutoBuy;
-import org.jetby.treexBuyer.functions.CoefficientManager;
+import org.jetby.treexBuyer.functions.BoosterBossBar;
+import org.jetby.treexBuyer.manager.CoefficientManager;
 import org.jetby.treexBuyer.functions.InventoryPrice;
 import org.jetby.treexBuyer.functions.PersistentActionBar;
 import org.jetby.treexBuyer.hook.TreexBuyerPlaceholder;
@@ -25,6 +26,8 @@ import org.jetby.treexBuyer.menus.BuyerGui;
 import org.jetby.treexBuyer.menus.actions.*;
 import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.storage.*;
+
+import java.util.UUID;
 
 @Getter
 public final class BuyerManager {
@@ -158,6 +161,13 @@ public final class BuyerManager {
     public void onDisable() {
         ActionRegistry.unregisterAll("treexbuyer");
 
+        for (BoosterBossBar.BossBarData data : BoosterBossBar.CURRENT_BOOSTERS) {
+            for (UUID uuid : data.getPlayers()) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (player==null) continue;
+                data.removePlayer(player);
+            }
+        }
 
         if (autoBuy != null) {
             autoBuy.stop();

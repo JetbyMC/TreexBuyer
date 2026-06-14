@@ -1,14 +1,17 @@
-package org.jetby.treexBuyer.functions;
+package org.jetby.treexBuyer.manager;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetby.treexBuyer.BuyerManager;
 import org.jetby.treexBuyer.configurations.BoostersConfiguration;
+import org.jetby.treexBuyer.functions.BoosterBossBar;
 import org.jetby.treexBuyer.models.Boost;
 import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.storage.score.Score;
 import org.jetby.treexBuyer.storage.score.types.CategoryScore;
 import org.jetby.treexBuyer.storage.score.types.PerItemScore;
+
+import java.util.Collection;
 
 public class CoefficientManager {
 
@@ -26,27 +29,35 @@ public class CoefficientManager {
         double earned = relevantScore / manager.getCfg().getScores() * manager.getCfg().getCoefficient();
         double base = manager.getCfg().getDefaultCoefficient() + earned;
         double legal = Math.min(base, manager.getCfg().getMaxCoefficient());
-        double boost = BoostersConfiguration.BOOSTERS.values().stream()
+
+        double totalCoefficient = 0.0;
+
+        for (Boost booster : getBoosters(player)) {
+            if (booster.boosters_except_legal_coefficient()) {
+                totalCoefficient += booster.coefficient();
+                continue;
+            }
+            totalCoefficient += Math.min(base + totalCoefficient, manager.getCfg().getMaxCoefficient());
+        }
+
+        return legal + totalCoefficient;
+
+    }
+
+    public Collection<Boost> getBoosters(Player player) {
+        return BoostersConfiguration.BOOSTERS.values().stream()
                 .filter(b -> {
                     if (b.permission() == null) return false;
 
                     BoosterBossBar.BossBarData data = BoosterBossBar.CURRENT_BOOSTERS.stream()
-                            .filter(d -> d.getPlayers().contains(player.getUniqueId()))
+                            .filter(d -> d.getBoost() == b && d.getPlayers().contains(player.getUniqueId()))
                             .findFirst()
                             .orElse(null);
 
-                    if (data != null) {
-                        return true;
-                    }
 
-                    return player.hasPermission(b.permission());
-                })
-                .mapToDouble(Boost::coefficient)
-                .sum();
+                    return data != null || player.hasPermission(b.permission());
 
-        return manager.getCfg().isBoosters_except_legal_coefficient()
-                ? legal + boost
-                : Math.min(base + boost, manager.getCfg().getMaxCoefficient());
+                }).toList();
     }
 
     public double getTotalCoefficientByCategory(Player player, String category) {

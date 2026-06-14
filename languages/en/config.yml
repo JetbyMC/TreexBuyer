@@ -1,3 +1,4 @@
+config-version: 1
 
 # Available serializers:
 # LEGACY_AMPERSAND  - "&c&lExample &c&9Text"
@@ -89,10 +90,3 @@ score-system:
   default-coefficient: 1.0
   max-legal-coefficient: 3.0
 
-  # If true, donor boosts will bypass the max-legal-coefficient value
-  boosters_except_legal_coefficient: true
-
-  booster:
-    donat-1: # name (can be anything)
-      permission: 'buyer.boost.donat1' # permission used to check if the player has this boost
-      external-coefficient: 0.5

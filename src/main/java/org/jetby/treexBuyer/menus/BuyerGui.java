@@ -163,13 +163,13 @@ public class BuyerGui extends ParsedGui {
             if (slotIndex >= slots.size()) break;
 
             if (sellerItem.properties().isEmpty()) {
-                Item copy = cloneWithMaterial(template, slots.get(slotIndex++), sellerItem.material(), sellerItem.price(), null);
+                Item copy = cloneWithMaterial(template, slots.get(slotIndex++), sellerItem.material(), sellerItem.price(), null, sellerItem);
                 result.add(copy);
                 continue;
             }
             for (Property property : sellerItem.properties()) {
                 if (slotIndex >= slots.size()) break;
-                Item copy = cloneWithMaterial(template, slots.get(slotIndex++), sellerItem.material(), sellerItem.price() + property.extraPrice(), property);
+                Item copy = cloneWithMaterial(template, slots.get(slotIndex++), sellerItem.material(), sellerItem.price() + property.extraPrice(), property, sellerItem);
                 result.add(copy);
                 if (!manager.getCfg().isGuiDuplicateByRule()) break;
             }
@@ -179,7 +179,7 @@ public class BuyerGui extends ParsedGui {
     }
 
 
-    private Item cloneWithMaterial(Item template, int slot, Material material, double price, Property property) {
+    private Item cloneWithMaterial(Item template, int slot, Material material, double price, Property property, SellerItem sellerItem) {
 
         double priceWithCoefficient = manager.getCoefficientManager().getPriceWithCoefficient(player, price, material);
         Item copy = new Item(new ItemStack(material));
@@ -189,7 +189,8 @@ public class BuyerGui extends ParsedGui {
         copy.priority(template.priority());
         copy.viewRequirements(template.viewRequirements());
         copy.flags(template.flags());
-        copy.customModelData(template.customModelData());
+
+        copy.customModelData(sellerItem.model());
 
         if (property != null) {
             if (property instanceof EnchantmentProperty p) {
