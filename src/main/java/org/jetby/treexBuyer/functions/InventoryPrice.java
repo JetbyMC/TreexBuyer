@@ -173,7 +173,7 @@ public class InventoryPrice implements Listener {
         double price = SellManager.countPrice(player, original);
         Component priceLine = manager.getCfg().getInventoryPriceText()
                 .replaceText(builder ->
-                        builder.matchLiteral("%price%")
+                        builder.matchLiteral("{price}")
                                 .replacement(Component.text(NumberUtils.format(price)))
                 )
                 .style(style -> style.insertion("price_line")); // mark

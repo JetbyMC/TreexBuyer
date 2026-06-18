@@ -17,11 +17,11 @@ Items:
     category: mine
     lore:
       - ''
-      - '<#FB6216> 💰 <white>Базовая цена <gray>$%price%'
-      - '<#FB6216> 💎 <white>С коэффициентом <#FB6216><bold>$%price_with_coefficient%'
+      - '<#FB6216> 💰 <white>Базовая цена <gray>${price}'
+      - '<#FB6216> 💎 <white>С коэффициентом <#FB6216><bold>${price_with_coefficient}'
       - ''
       - '<dark_gray>───────────────────'
-      - '<gray> 🔄 <white>Авто-скупка: %auto_sell_toggle_state%'
+      - '<gray> 🔄 <white>Авто-скупка: {auto_sell_toggle_state}'
       - '<gray> ❱ <white><underlined>Нажмите чтобы переключить'
       - ''
     on_click:

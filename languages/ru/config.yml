@@ -65,7 +65,7 @@ disallowed-item:
 #
 inventory-price:
   enable: true
-  text: "<white>Цена: $%price%"
+  text: "<white>Цена: ${price}"
 #
 # Показывает игроку стоимость его инвентаря в actionbar
 #

@@ -167,6 +167,7 @@ public class BuyerGui extends ParsedGui {
                 result.add(copy);
                 continue;
             }
+
             for (Property property : sellerItem.properties()) {
                 if (slotIndex >= slots.size()) break;
                 Item copy = cloneWithMaterial(template, slots.get(slotIndex++), sellerItem.material(), sellerItem.price() + property.extraPrice(), property, sellerItem);
@@ -178,10 +179,8 @@ public class BuyerGui extends ParsedGui {
         return result;
     }
 
-
     private Item cloneWithMaterial(Item template, int slot, Material material, double price, Property property, SellerItem sellerItem) {
 
-        double priceWithCoefficient = manager.getCoefficientManager().getPriceWithCoefficient(player, price, material);
         Item copy = new Item(new ItemStack(material));
         copy.slots(List.of(slot));
         copy.section(template.section());
@@ -189,6 +188,9 @@ public class BuyerGui extends ParsedGui {
         copy.priority(template.priority());
         copy.viewRequirements(template.viewRequirements());
         copy.flags(template.flags());
+
+        copy.displayName(template.displayName());
+        copy.lore(template.lore());
 
         copy.customModelData(sellerItem.model());
 
@@ -202,25 +204,25 @@ public class BuyerGui extends ParsedGui {
             copy.enchanted(user.getAutoBuyItems().contains(material));
         }
 
-        if (template.displayName() != null) {
-            copy.displayName(substitutePrice(template.displayName(), price, priceWithCoefficient, material));
-        }
-        if (template.lore() != null) {
-            copy.lore(template.lore().stream()
-                    .map(line -> substitutePrice(line, price, priceWithCoefficient, material))
-                    .collect(java.util.stream.Collectors.toList()));
-        }
+        setReplace(copy, "{price}", NumberUtils.format(price));
+        setReplace(copy, "%price%", NumberUtils.format(price));
+
+        setReplace(copy, "{price_commas}", NumberUtils.formatWithCommas(price));
+        setReplace(copy, "%price_commas%", NumberUtils.formatWithCommas(price));
+
+        double priceWithCoefficient = manager.getCoefficientManager().getPriceWithCoefficient(player, price, material);
+        setReplace(copy, "{price_with_coefficient}", NumberUtils.format(priceWithCoefficient));
+        setReplace(copy, "%price_with_coefficient%", NumberUtils.format(priceWithCoefficient));
+
+        setReplace(copy, "{price_with_coefficient_commas}", NumberUtils.formatWithCommas(priceWithCoefficient));
+        setReplace(copy, "%price_with_coefficient_commas%", NumberUtils.formatWithCommas(priceWithCoefficient));
+
+        setReplace(copy, "{auto_sell_toggle_state}",
+                user.getAutoBuyItems().contains(material) ? manager.getCfg().getEnable() : manager.getCfg().getDisable());
+        setReplace(copy, "%auto_sell_toggle_state%",
+                user.getAutoBuyItems().contains(material) ? manager.getCfg().getEnable() : manager.getCfg().getDisable());
 
         return copy;
-    }
-
-    private String substitutePrice(String line, double price, double priceWithCoeff, Material mat) {
-        return line
-                .replace("%price%", NumberUtils.format(price))
-                .replace("%price_commas%", NumberUtils.formatWithCommas(price))
-                .replace("%price_with_coefficient%", NumberUtils.format(priceWithCoeff))
-                .replace("%price_with_coefficient_commas%", NumberUtils.formatWithCommas(priceWithCoeff))
-                .replace("%auto_sell_toggle_state%", user.getAutoBuyItems().contains(mat) ? manager.getCfg().getEnable() : manager.getCfg().getDisable());
     }
 
     public List<Material> getVisibleMaterials() {

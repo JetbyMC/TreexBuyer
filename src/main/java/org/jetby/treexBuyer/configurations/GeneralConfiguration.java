@@ -85,7 +85,7 @@ public class GeneralConfiguration {
 
 
         inventoryPrice = config.getBoolean("inventory-price.enable", false);
-        inventoryPriceText = LibbApi.Settings.CONFIG_COLORIZER.deserialize(config.getString("inventory-price.text", "<green>$%price%"));
+        inventoryPriceText = LibbApi.Settings.CONFIG_COLORIZER.deserialize(config.getString("inventory-price.text", "<green>${price}"));
 
         persistentActionbar = config.getBoolean("persistent-actionbar.enable", false);
         persistentActionbarText = LibbApi.Settings.CONFIG_COLORIZER.deserialize(config.getString("persistent-actionbar.text", ""));

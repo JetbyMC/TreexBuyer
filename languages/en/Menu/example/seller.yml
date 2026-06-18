@@ -67,10 +67,10 @@
 #
 # Internal placeholders:
 #
-# %price% - Price of this item (works only for items with a category or item section)
-# %price_with_coefficient% - Price including the coefficient
-# %price_commas%
-# %price_with_coefficient_commas%
+# {price} - Price of this item (works only for items with a category or item section)
+# {price_with_coefficient} - Price including the coefficient
+# {price_commas}
+# {price_with_coefficient_commas}
 # %coefficient%
 # %score%
 # %score_commas%
