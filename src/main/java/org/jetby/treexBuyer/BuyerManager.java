@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetby.libb.action.ActionRegistry;
+import org.jetby.libb.util.LibraryLoader;
 import org.jetby.libb.util.Logger;
 import org.jetby.libb.util.Metrics;
 import org.jetby.libb.util.VersionUtil;
@@ -27,6 +28,9 @@ import org.jetby.treexBuyer.menus.actions.*;
 import org.jetby.treexBuyer.models.UserData;
 import org.jetby.treexBuyer.storage.*;
 
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -63,8 +67,20 @@ public final class BuyerManager {
     public void onEnable() {
         MANAGER = this;
 
+//        new LibraryLoader(new LibraryLoader.Library("https://repo.maven.apache.org/maven2/",
+//                List.of(
+//                        new LibraryLoader.Dependency("com.zaxxer", "HikariCP", "7.0.2", "com.zaxxer.hikari")
+//                )
+//        ), plugin);
+//
+//        URLClassLoader hikariLoader = LibraryLoader.load(
+//                plugin,
+//                "hikari",
+//                "https://repo.maven.apache.org/maven2/",
+//                List.of(new LibraryLoader.Dependency("com.zaxxer", "HikariCP", "7.0.2", "com.zaxxer.hikari.HikariConfig"))
+//        );
 
-        Logger.info(plugin, Bukkit.getVersion());
+
         Logger.info(plugin, "------------------------");
         new VersionUtil(plugin, plugin.getDescription().getVersion(), "https://raw.githubusercontent.com/MrJetby/TreexBuyer/refs/heads/master/VERSION", "treexbuyer.auto-update");
         this.economy = Vault.setupEconomy(plugin);
@@ -209,7 +225,6 @@ public final class BuyerManager {
 
         ActionRegistry.override("treexbuyer", "refresh", (ctx, s) -> {
             BuyerGui gui = ctx.get(BuyerGui.class);
-
             Player player = ctx.getPlayer();
             if (player == null) return;
 

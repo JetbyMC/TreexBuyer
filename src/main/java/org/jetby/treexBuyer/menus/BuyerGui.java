@@ -203,7 +203,6 @@ public class BuyerGui extends ParsedGui {
         if (copy.enchantments() == null || copy.enchantments().isEmpty()) {
             copy.enchanted(user.getAutoBuyItems().contains(material));
         }
-
         setReplace(copy, "{price}", NumberUtils.format(price));
         setReplace(copy, "%price%", NumberUtils.format(price));
 
