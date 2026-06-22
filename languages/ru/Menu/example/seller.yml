@@ -71,9 +71,9 @@
 # {price_with_coefficient} - Цена если учитывать коэффициент
 # {price_commas}
 # {price_with_coefficient_commas}
-# %coefficient%
-# %score%
-# %score_commas%
+# {coefficient}
+# {score}
+# {score_commas}
 # %sell_pay% - Цена всех предметов для продажи
 # %sell_pay_commas%
 # %sell_score% - Очки всех предметов которые получит игрок из продажи
@@ -135,8 +135,8 @@ Items:
     slot: 45
     display_name: ' '
     lore:
-      - ' <white>Текущий коэффицент: <red>x%coefficient%'
-      - ' <white>Очков: <red>%score%'
+      - ' <white>Текущий коэффицент: <red>x{coefficient}'
+      - ' <white>Очков: <red>{score}'
       - '  '
       - ' <gradient:#E8A309:#EFCF48>Нажмите, чтобы настроить авто скупку</gradient> '
       - ' '

@@ -39,9 +39,7 @@ public class SellItem implements Action {
 
         if (amount <= 0) return;
 
-        player.getInventory().removeItem(new ItemStack(wrapper.itemStack().getType(), amount));
-
-        SellManager.sell(player, wrapper.itemStack(), gui.getInventory());
+        SellManager.sell(player, new ItemStack(wrapper.itemStack().getType(), amount), player.getInventory());
         gui.refresh();
     }
 }

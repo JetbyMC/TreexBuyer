@@ -71,9 +71,9 @@
 # {price_with_coefficient} - Price including the coefficient
 # {price_commas}
 # {price_with_coefficient_commas}
-# %coefficient%
-# %score%
-# %score_commas%
+# {coefficient}
+# {score}
+# {score_commas}
 # %sell_pay% - Total price of all items in sell slots
 # %sell_pay_commas%
 # %sell_score% - Total score the player will earn from selling
@@ -134,8 +134,8 @@ Items:
     slot: 45
     display_name: ' '
     lore:
-      - ' <white>Current coefficient: <red>x%coefficient%'
-      - ' <white>Points: <red>%score%'
+      - ' <white>Current coefficient: <red>x{coefficient}'
+      - ' <white>Points: <red>{score}'
       - '  '
       - ' <gradient:#E8A309:#EFCF48>Click to configure auto-sell</gradient> '
       - ' '
