@@ -13,8 +13,6 @@ import org.jetby.treexBuyer.models.UserData;
 import java.sql.*;
 import java.util.UUID;
 
-import static org.jetby.treexBuyer.BuyerManager.LOGGER;
-
 public class MySQLStorage
         implements Storage {
     private final BuyerManager manager;

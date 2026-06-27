@@ -243,7 +243,7 @@ public class BuyerGui extends ParsedGui {
         copy.viewRequirements(template.viewRequirements());
         copy.flags(template.flags());
 
-        copy.displayName(template.displayName());
+        copy.displayName(template.displayName().isEmpty() ? null : template.displayName());
         copy.lore(template.lore());
 
         copy.customModelData(sellerItem.model());

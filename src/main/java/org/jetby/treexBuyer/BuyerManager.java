@@ -67,19 +67,12 @@ public final class BuyerManager {
     public void onEnable() {
         MANAGER = this;
 
-//        new LibraryLoader(new LibraryLoader.Library("https://repo.maven.apache.org/maven2/",
-//                List.of(
-//                        new LibraryLoader.Dependency("com.zaxxer", "HikariCP", "7.0.2", "com.zaxxer.hikari")
-//                )
-//        ), plugin);
-//
-//        URLClassLoader hikariLoader = LibraryLoader.load(
-//                plugin,
-//                "hikari",
-//                "https://repo.maven.apache.org/maven2/",
-//                List.of(new LibraryLoader.Dependency("com.zaxxer", "HikariCP", "7.0.2", "com.zaxxer.hikari.HikariConfig"))
-//        );
-
+        LibraryLoader.load(
+                plugin,
+                "hikari",
+                "https://repo.maven.apache.org/maven2/",
+                List.of(new LibraryLoader.Dependency("com.zaxxer", "HikariCP", "7.0.2", "com.zaxxer.hikari.HikariConfig"))
+        );
 
         Logger.info(plugin, "------------------------");
         new VersionUtil(plugin, plugin.getDescription().getVersion(), "https://raw.githubusercontent.com/MrJetby/TreexBuyer/refs/heads/master/VERSION", "treexbuyer.auto-update");
